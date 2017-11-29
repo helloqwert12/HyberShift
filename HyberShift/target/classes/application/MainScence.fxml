@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="823.0" prefWidth="1233.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <right>
+      <FlowPane prefHeight="754.0" prefWidth="325.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="pnPersonal" prefHeight="92.0" prefWidth="324.0" style="-fx-background-color: #84BEF2;">
+               <children>
+                  <ImageView fitHeight="77.0" fitWidth="90.0" layoutX="14.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../icon/profilepicture.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lblName" layoutX="109.0" layoutY="14.0" prefHeight="34.0" prefWidth="89.0" text="Name">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </children></Pane>
+            <ListView fx:id="lstvwChatList" prefHeight="658.0" prefWidth="323.0" style="-fx-background-color: #B6D6F2;" />
+         </children>
+      </FlowPane>
+   </right>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <bottom>
+            <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="20.0" orientation="VERTICAL" prefHeight="70.0" prefWidth="910.0" style="-fx-background-color: #B6D6F2;" BorderPane.alignment="CENTER">
+               <children>
+                  <TextArea fx:id="tfChatInput" prefHeight="50.0" prefWidth="809.0" />
+                  <ImageView fx:id="imgvwSend" fitHeight="48.0" fitWidth="46.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../icon/send.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </FlowPane>
+         </bottom>
+         <top>
+            <GridPane alignment="CENTER_RIGHT" prefHeight="92.0" prefWidth="908.0" style="-fx-background-color: #B6D6F2;" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="426.0" minWidth="10.0" prefWidth="377.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="0.0" prefWidth="98.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="216.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="118.0" minWidth="10.0" prefWidth="77.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="106.0" minWidth="10.0" prefWidth="75.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fx:id="imgvwVideoCall" fitHeight="72.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                     <image>
+                        <Image url="@../../icon/videocall.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imgvwTakeNote" fitHeight="56.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                     <image>
+                        <Image url="@../../icon/note.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lblChatName" prefHeight="47.0" prefWidth="367.0" text="Name of chat">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </GridPane>
+         </top>
+         <center>
+            <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </center>
+   <top>
+      <GridPane alignment="CENTER_RIGHT" prefHeight="73.0" prefWidth="1233.0" style="-fx-background-color: #011640;" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1143.0" minWidth="10.0" prefWidth="1072.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1143.0" minWidth="10.0" prefWidth="111.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="605.0" minWidth="10.0" prefWidth="106.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+         <children>
+            <ImageView fx:id="imgvwSetting" fitHeight="58.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+               <image>
+                  <Image url="@../../icon/setting.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgvwCreateGroupChat" fitHeight="54.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+               <image>
+                  <Image url="@../../icon/creategroupchat.png" />
+               </image>
+            </ImageView>
+         </children>
+      </GridPane>
+   </top>
+</BorderPane>
