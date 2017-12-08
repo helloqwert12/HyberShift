@@ -35,7 +35,6 @@ public class Main extends Application {
 	}
 	
 	public static void showRegisterScene() throws IOException{
-
 		try {
 		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/login/RegisterScene.fxml"));
 		    Parent root = (Parent) fxmlLoader.load();
@@ -48,11 +47,21 @@ public class Main extends Application {
 		    } catch(Exception e) {
 		       e.printStackTrace();
 		      }
-		
 	}
 	
 	public static void showMainFromLoginScene(){
-		
+		try {
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/mainchat/MainScene.fxml"));
+		    Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));  
+            stage.show();
+            stg.close();
+            stg = stage;
+		            
+		    } catch(Exception e) {
+		       e.printStackTrace();
+		      }
 	}
 	
 	public static void showMainFromRegister(){

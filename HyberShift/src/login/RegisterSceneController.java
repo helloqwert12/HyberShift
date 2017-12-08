@@ -9,10 +9,12 @@ import com.github.nkzawa.emitter.Emitter.Listener;
 import com.github.nkzawa.socketio.client.Socket;
 
 import dataobject.UserInfo;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 public class RegisterSceneController {
 	@FXML TextField tfEmail;
@@ -26,12 +28,30 @@ public class RegisterSceneController {
 	UserInfo userInfo;
 	
 	public RegisterSceneController(){
-		socket = ChatSocket.getInstance().getSocket();
-		socket.on("register", new Listener() {
+		
+		ChatSocket.getInstance();
+		socket = ChatSocket.getSocket();
+			
+		socket.on("register_result", new Listener() {
 			
 			@Override
 			public void call(Object... args) {
-				new Alert(Alert.AlertType.INFORMATION, "Register successfully").show();
+				JSONObject data = (JSONObject) args[0];
+                String message;
+                try {
+                    message = data.getString("message");
+                    System.out.println(message);
+                    Platform.runLater(new Runnable(){
+						@Override
+						public void run() {		
+							new Alert(AlertType.INFORMATION, message).show();
+						}       	 
+                    });
+                   
+                } catch (JSONException e) {
+                	e.printStackTrace();
+                    return;
+                }	
 			}
 		});
 	}
@@ -39,6 +59,10 @@ public class RegisterSceneController {
 	public void onActionBtnConfirm(){
 		System.out.println("BtnConfirm clicked");
 		
+		if (!isValid()){
+			new Alert(AlertType.WARNING, "Something went wrong with your information. Please check again").show();
+			return;
+		}
 		//Push data
 		userInfo = new UserInfo(tfEmail.getText().toString(), tfPassword.getText().toString(), tfPhoneNumber.getText().toString(), tfName.getText().toString());
 		
@@ -60,6 +84,7 @@ public class RegisterSceneController {
 	}
 	
 	private boolean isValid(){
+		System.out.println(tfEmail.getText().trim().length());
 		if (tfEmail.getText().trim().length() == 0)
 			return false;
 		if (tfName.getText().trim().length() == 0)
@@ -70,8 +95,9 @@ public class RegisterSceneController {
 			return false;
 		if (tfPhoneNumber.getText().trim().length() == 0)
 			return false;
-		if (tfPassword.getText() != tfConfirmPassword.getText())
+		if (!tfPassword.getText().toString().equals(tfConfirmPassword.getText().toString()))
 			return false;
 		return true;
 	}
 }
+	
