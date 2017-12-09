@@ -7,6 +7,7 @@ public class UserInfo {
 	private String phone;
 	private String fullName;
 	private String linkAvatar;
+	private static UserInfo instance = null;
 	
 	public UserInfo(){
 		
@@ -21,6 +22,13 @@ public class UserInfo {
 		//this.linkAvatar = linkAvatar;
 	}
 	
+	public static UserInfo getInstance(){
+		if (instance == null)
+			instance = new UserInfo();
+		
+		return instance;
+	}
+	
 	public String getUserid() { return userid; }
 	public String getEmail() { return email; }
 	public String getPassword() { return password; }
@@ -30,6 +38,7 @@ public class UserInfo {
 	
 	public void setUserid(String userid) { this.userid = userid; }
 	public void setEmail(String email) { this.email = email; }
+	public void setPassword(String password) { this.password = password; }
 	public void setPhone(String phone) { this.phone = phone; }
 	public void setFullName(String fullName) { this.fullName = fullName; }
 	public void setLinkAvatar(String linkAvatar) { this.linkAvatar = linkAvatar; }

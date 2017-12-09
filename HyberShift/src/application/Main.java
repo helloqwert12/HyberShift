@@ -22,7 +22,7 @@ public class Main extends Application {
 			Parent root = FXMLLoader.load(getClass().getResource("LoginScene.fxml"));
 			this.stg = primaryStage;
 			primaryStage.setTitle("Log in");
-			primaryStage.setScene(new Scene(root, 600, 400));
+			primaryStage.setScene(new Scene(root, 900, 500));
 			primaryStage.show();
 			//Scene scene = new Scene(root,600,400);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -51,7 +51,8 @@ public class Main extends Application {
 	
 	public static void showMainFromLoginScene(){
 		try {
-		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/mainchat/MainScene.fxml"));
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/mainchat/ChatScene.fxml"));
+			//FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Register.fxml"));
 		    Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));  

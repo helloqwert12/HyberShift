@@ -18,5 +18,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/tranminhquan/Downloads/java-json.jar/java-json.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tranminhquan/Downloads/jfoenix.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

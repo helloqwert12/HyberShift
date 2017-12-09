@@ -64,8 +64,12 @@ public class RegisterSceneController {
 			return;
 		}
 		//Push data
-		userInfo = new UserInfo(tfEmail.getText().toString(), tfPassword.getText().toString(), tfPhoneNumber.getText().toString(), tfName.getText().toString());
+		userInfo = UserInfo.getInstance();
 		
+		userInfo.setEmail(tfEmail.getText().toString());
+		userInfo.setPassword(tfPassword.getText().toString());
+		userInfo.setPhone(tfPhoneNumber.getText().toString());
+		userInfo.setFullName(tfName.getText().toString());
 		//Convert to JSONObject
 		JSONObject userjson = new JSONObject();
 		try {

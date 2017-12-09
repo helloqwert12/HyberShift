@@ -29,7 +29,7 @@ public class LoginSceneController {
 	ChatSocket chatsocket;
 	Socket socket;
 	Runnable socketRunnable;
-	
+	UserInfo userInfo = UserInfo.getInstance();
 
 	public LoginSceneController(){
 		initSocket();
@@ -41,25 +41,31 @@ public class LoginSceneController {
 			@Override
 			public void call(Object... args) {
 				JSONObject data = (JSONObject) args[0];
-                Boolean result;
+				System.out.println(data);
+                String result;
                 try {
-                    result = data.getBoolean("result");
-                    System.out.println(result);
-                    if (result == true){
+                	if (data != null){
+                    userInfo.setFullName(data.getJSONObject("userRecord").getString("displayName"));
+                                    
                     	Platform.runLater(new Runnable(){
     						@Override
     						public void run() {		
     							Main.showMainFromLoginScene();
     						}       	 
                         });   	
-                    }
-                    
-                   
+                	}
+                	else
+                		Platform.runLater(new Runnable(){
+    						@Override
+    						public void run() {		
+    							new Alert(AlertType.ERROR, "Your email or password not valid. Please try again").show();
+    						}       	 
+                        });  
                 } catch (JSONException e) {
                 	e.printStackTrace();
                     return;
                 }	
-				System.out.println("Sign in successfully");
+				
 			}
 		});
 		
