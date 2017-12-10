@@ -8,38 +8,77 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RegisterController">
+<AnchorPane prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: TRANSPARENT;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RegisterController">
    <children>
       <AnchorPane layoutY="34.0" style="-fx-background-color: #ffff;">
          <children>
-            <JFXButton buttonType="RAISED" layoutY="145.0" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Login">
+            <JFXButton fx:id="btnLogin" layoutY="145.0" onAction="#handleButtonAction" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Login">
                <font>
                   <Font size="15.0" />
                </font>
             </JFXButton>
-            <JFXButton layoutY="215.0" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Register">
+            <JFXButton fx:id="btnRegister" layoutY="215.0" onAction="#handleButtonAction" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Register">
                <font>
                   <Font size="15.0" />
                </font>
             </JFXButton>
-            <JFXButton layoutY="285.0" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Exit">
+            <JFXButton fx:id="btnExit" layoutY="285.0" onAction="#handleButtonAction" prefHeight="70.0" prefWidth="150.0" ripplerFill="#6677e3" text="Exit">
                <font>
                   <Font size="15.0" />
                </font>
             </JFXButton>
-            <AnchorPane layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
+            <AnchorPane fx:id="pn_Register" layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
                <children>
-                  <JFXTextField layoutX="25.0" layoutY="156.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
+                  <JFXTextField fx:id="tfEmail" layoutX="25.0" layoutY="109.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXPasswordField layoutX="25.0" layoutY="230.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
+                  <JFXTextField fx:id="tfName" layoutX="26.0" layoutY="161.0" prefHeight="40.0" prefWidth="300.0" promptText="Name">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="tfPhoneNumber" layoutX="26.0" layoutY="219.0" prefHeight="40.0" prefWidth="300.0" promptText="Phone number">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXPasswordField fx:id="tfPassword" layoutX="26.0" layoutY="273.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXPasswordField>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="147.0" layoutY="388.0" prefHeight="48.0" prefWidth="47.0">
+                  <JFXPasswordField fx:id="tfConfirmPassword" layoutX="26.0" layoutY="333.0" prefHeight="40.0" prefWidth="300.0" promptText="Confirm Password">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXPasswordField>
+                  <JFXButton fx:id="btnConfirm" contentDisplay="GRAPHIC_ONLY" layoutX="147.0" layoutY="393.0" onAction="#onActionBtnConfirm" prefHeight="40.0" prefWidth="40.0" text="Button">
+                     <graphic>
+                        <FontAwesomeIconView fill="#1a33d5" glyphName="CHEVRON_CIRCLE_RIGHT" size="50" wrappingWidth="41.0" />
+                     </graphic>
+                  </JFXButton>
+                  <Label layoutX="139.0" layoutY="40.0" prefHeight="40.0" prefWidth="86.0" text="Register" textFill="#1a33d5">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="pn_Login" layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
+               <children>
+                  <JFXTextField fx:id="tfEmailLogin" layoutX="25.0" layoutY="156.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXPasswordField fx:id="tfPasswordLogin" layoutX="25.0" layoutY="230.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXPasswordField>
+                  <JFXButton fx:id="btnSignin" contentDisplay="GRAPHIC_ONLY" layoutX="147.0" layoutY="388.0" onAction="#onActionBtnSigin" prefHeight="48.0" prefWidth="47.0">
                      <graphic>
                         <FontAwesomeIconView fill="#1a33d5" glyphName="CHEVRON_CIRCLE_RIGHT" size="50" wrappingWidth="41.0" />
                      </graphic>
@@ -51,49 +90,9 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
-               <children>
-                  <JFXPasswordField layoutX="26.0" layoutY="273.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXPasswordField>
-                  <JFXTextField layoutX="25.0" layoutY="109.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="147.0" layoutY="393.0" prefHeight="40.0" prefWidth="40.0" text="Button">
-                     <graphic>
-                        <FontAwesomeIconView fill="#1a33d5" glyphName="CHEVRON_CIRCLE_RIGHT" size="50" wrappingWidth="41.0" />
-                     </graphic>
-                  </JFXButton>
-                  <JFXPasswordField layoutX="26.0" layoutY="333.0" prefHeight="40.0" prefWidth="300.0" promptText="Confirm Password">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXPasswordField>
-                  <JFXTextField layoutX="26.0" layoutY="219.0" prefHeight="40.0" prefWidth="300.0" promptText="Phone number">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField layoutX="26.0" layoutY="161.0" prefHeight="40.0" prefWidth="300.0" promptText="Name">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <Label layoutX="139.0" layoutY="40.0" prefHeight="40.0" prefWidth="86.0" text="Register" textFill="#1a33d5">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="297.0" layoutY="10.0" prefHeight="30.0" prefWidth="30.0" />
-               </children>
-            </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="150.0" layoutY="-31.0" prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #011640;">
+      <AnchorPane layoutX="150.0" prefHeight="569.0" prefWidth="400.0" style="-fx-background-color: #011640;">
          <children>
             <Label layoutX="82.0" layoutY="317.0" prefHeight="40.0" prefWidth="250.0" text="Welcome to HyperShift" textFill="#f5f5f8">
                <font>
