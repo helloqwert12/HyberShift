@@ -17,8 +17,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/tranminhquan/Downloads/java-json.jar/java-json.jar"/>
-	<classpathentry kind="lib" path="C:/Users/tranminhquan/Downloads/jfoenix.jar"/>
-	<classpathentry kind="lib" path="D:/SceneBuilder Goma/hàng/fontawesomefx-8.9.jar"/>
+	<classpathentry kind="lib" path="E:/My Projects/Java/Git/HyberShift/jar/java-json.jar"/>
+	<classpathentry kind="lib" path="E:/My Projects/Java/Git/HyberShift/jar/fontawesomefx-8.9.jar"/>
+	<classpathentry kind="lib" path="E:/My Projects/Java/Git/HyberShift/jar/jfoenix.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
