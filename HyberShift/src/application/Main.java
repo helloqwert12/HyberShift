@@ -19,7 +19,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("LoginScene.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("LoginScene.fxml"));	
 			this.stg = primaryStage;
 			primaryStage.setTitle("Log in");
 			primaryStage.setScene(new Scene(root, 900, 500));
@@ -51,7 +51,7 @@ public class Main extends Application {
 	
 	public static void showMainFromLoginScene(){
 		try {
-		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/mainchat/ChatScene.fxml"));
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/chat/ChatScene.fxml"));
 			//FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Register.fxml"));
 		    Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();

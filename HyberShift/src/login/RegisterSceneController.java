@@ -3,6 +3,7 @@ package login;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import application.Main;
 import chatsocket.ChatSocket;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
@@ -23,6 +24,7 @@ public class RegisterSceneController {
 	@FXML TextField tfConfirmPassword;
 	@FXML TextField tfPhoneNumber;
 	@FXML Button btnConfirm;
+
 	
 	Socket socket;
 	UserInfo userInfo;
@@ -79,12 +81,15 @@ public class RegisterSceneController {
 			userjson.put("password", userInfo.getPassword());
 			userjson.put("phone", userInfo.getPhone());
 			userjson.put("linkavatar", userInfo.getLinkAvatar());
+			
+			socket.emit("register", userjson);
+			Main.showMainFromRegister();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		socket.emit("register", userjson);
+		
 	}
 	
 	private boolean isValid(){
