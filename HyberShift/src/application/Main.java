@@ -5,12 +5,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
+import chatsocket.ChatSocket;
+
+import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -85,7 +89,6 @@ public class Main extends Application {
 	public static void showMainFromLoginScene(){
 		try {
 		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/chat/ChatScene.fxml"));
-			//FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Register.fxml"));
 		    Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));  
@@ -95,11 +98,26 @@ public class Main extends Application {
 		            
 		    } catch(Exception e) {
 		       e.printStackTrace();
-		      }
+		    }
 	}
 	
 	public static void showMainFromRegister(){
 		
+	}
+	
+	public static void showCreateRoomScene(){
+		try {
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/chat/CreateRoomScene.fxml"));
+		    Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));  
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.show();	
+            stg = stage;
+		            
+		    } catch(Exception e) {
+		       e.printStackTrace();
+		    }
 	}
 	
 	public static void main(String[] args) {

@@ -1,5 +1,8 @@
 package chat;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,23 +10,24 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import application.Main;
 import chatsocket.ChatSocket;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
 import com.github.nkzawa.socketio.client.Socket;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.*;
 
 import dataobject.UserInfo;
 
-public class ChatSceneController {
-	@FXML
-	JFXListView<String> lvMessage;
-	@FXML
-	JFXTextArea taEdit;
+public class ChatSceneController implements Initializable {
+	@FXML JFXListView<String> lvMessage;
+	@FXML JFXTextArea taEdit;
+	@FXML Label lblUsername;
 	
 	ChatSocket chatsocket;
 	Socket socket;
@@ -61,6 +65,7 @@ public class ChatSceneController {
 				
 			}
 		});
+	
 	}
 	
 	@FXML
@@ -75,6 +80,12 @@ public class ChatSceneController {
         {			
 			sendMessage();
         }
+	}
+	
+	@FXML
+	public void onActionBtnCreateRoomClick(){
+		System.out.println("btnCreateRoom click");
+		Main.showCreateRoomScene();
 	}
 	
 	private void sendMessage(){
@@ -92,12 +103,22 @@ public class ChatSceneController {
 			//sendMessage(taEdit.getText().toString());
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block	
 			e.printStackTrace();
 		}
 		
 		taEdit.clear();
 	}
 	
+	private void updateUI(){
+		//update Username label when signing
+		lblUsername.setText(userInfo.getFullName());
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		//update UI
+		updateUI();	
+	}
 	
 }
