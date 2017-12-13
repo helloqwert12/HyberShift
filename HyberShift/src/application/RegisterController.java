@@ -282,7 +282,7 @@ public class RegisterController implements Initializable{
 			userjson.put("linkavatar", userInfo.getLinkAvatar());
 			
 			socket.emit("register", userjson);
-			Main.showMainFromRegister();
+			//Main.showMainFromRegister();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

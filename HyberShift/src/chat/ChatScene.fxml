@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: #020A17;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.ChatSceneController">
+<AnchorPane prefHeight="784.0" prefWidth="1369.0" style="-fx-background-color: #020A17;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.ChatSceneController">
 	<children>
 	 <AnchorPane layoutX="109.0" layoutY="10.0" prefHeight="784.0" prefWidth="335.0" style="-fx-background-color: #011640; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-background-radius: 0 20 20 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="109.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -33,7 +35,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="17.0" layoutY="25.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0" />
+            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="21.0" layoutY="100.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0" />
             <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" prefHeight="65.0" prefWidth="65.0" />
             <ImageView fitHeight="52.0" fitWidth="53.0" layoutX="29.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -48,7 +50,7 @@
          <children>
             <AnchorPane layoutX="11.0" prefHeight="78.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 0 0 10 10;" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="592.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="6.0">
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="738.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="6.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -57,7 +59,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="505.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="6.0">
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="666.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="177.0" AnchorPane.topAnchor="6.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -71,6 +73,15 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
+                  <JFXButton fx:id="btnRealtimeBoard" contentDisplay="GRAPHIC_ONLY" layoutX="810.0" layoutY="7.0" onAction="#onActionBtnRealtimeBoardClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="7.0">
+                     <graphic>
+                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/realtime_board.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="11.0" layoutY="584.0" prefHeight="92.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0">
@@ -87,7 +98,12 @@
                   </JFXButton>
                </children>
             </AnchorPane>
-            <JFXListView fx:id="lvMessage" layoutX="19.0" layoutY="82.0" prefHeight="606.0" prefWidth="676.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="82.0" />
+            <JFXListView fx:id="lvMessage" layoutX="19.0" layoutY="82.0" prefHeight="606.0" prefWidth="487.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="82.0" />
+            <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="509.0" layoutY="82.0" prefHeight="606.0" prefWidth="403.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="509.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
+               <children>
+                  <Canvas height="605.0" width="403.0" />
+               </children>
+            </JFXDrawer>
          </children>
       </AnchorPane>
 	</children>

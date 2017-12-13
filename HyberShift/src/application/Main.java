@@ -36,7 +36,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));	
+			//Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));	
+			Parent root = FXMLLoader.load(getClass().getResource("/chat/ChatScene.fxml"));	
 			this.stg = primaryStage;
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			
@@ -101,8 +102,19 @@ public class Main extends Application {
 		    }
 	}
 	
-	public static void showMainFromRegister(){
-		
+	public static void showMainChatScene(){
+		try {
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/chat/ChatScene.fxml"));
+		    Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));  
+            stage.show();
+            stg.close();
+            stg = stage;
+		            
+		    } catch(Exception e) {
+		       e.printStackTrace();
+		    }
 	}
 	
 	public static void showCreateRoomScene(){
@@ -113,6 +125,7 @@ public class Main extends Application {
             stage.setScene(new Scene(root));  
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.show();	
+            stg.close();
             stg = stage;
 		            
 		    } catch(Exception e) {

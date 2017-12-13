@@ -1,5 +1,6 @@
 package chat;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,12 +8,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import application.Main;
 import chatsocket.ChatSocket;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.*;
 
+import dataobject.Room;
 import dataobject.UserInfo;
 
 public class CreateRoomSceneController {
@@ -34,21 +37,31 @@ public class CreateRoomSceneController {
 			
 			@Override
 			public void call(Object... args) {
-				String info = (String) args[0];
-				if (info == "success")
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							new Alert(AlertType.INFORMATION, "Create room successfully!").show();
-						}
-					});
-				else
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							new Alert(AlertType.INFORMATION, "Create room failed, emails " + info + " is not valid.").show();
-						}
-					});					
+				JSONObject jsoninfo = (JSONObject) args[0];
+				JSONArray invalid;
+				try {
+					invalid = jsoninfo.getJSONArray("invalid");
+					if (invalid.length() == 0){
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								new Alert(AlertType.INFORMATION, "Create room successfully!").show();
+								Main.showMainChatScene();
+							}
+						});
+					}
+					else{
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								new Alert(AlertType.INFORMATION, "Create room successfully, emails " + invalid + " is not valid.").show();
+							}
+						});	
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		

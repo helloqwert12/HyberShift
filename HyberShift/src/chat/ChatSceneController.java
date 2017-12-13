@@ -1,5 +1,6 @@
 package chat;
 
+import java.awt.Graphics;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -9,12 +10,14 @@ import org.json.JSONObject;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import application.Main;
 import chatsocket.ChatSocket;
 
@@ -28,6 +31,8 @@ public class ChatSceneController implements Initializable {
 	@FXML JFXListView<String> lvMessage;
 	@FXML JFXTextArea taEdit;
 	@FXML Label lblUsername;
+    @FXML private JFXButton btnRealtimeBoard;
+    @FXML private JFXDrawer drawer;
 	
 	ChatSocket chatsocket;
 	Socket socket;
@@ -65,6 +70,8 @@ public class ChatSceneController implements Initializable {
 				
 			}
 		});
+		
+		
 	
 	}
 	
@@ -87,6 +94,26 @@ public class ChatSceneController implements Initializable {
 		System.out.println("btnCreateRoom click");
 		Main.showCreateRoomScene();
 	}
+	
+    @FXML
+    void onActionBtnRealtimeBoardClick() {
+    	if (drawer.isShown()){
+    		Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					drawer.close();
+				}
+			});
+    	}
+    	else{
+    		Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					drawer.open();
+				}
+			});
+    	}
+    }
 	
 	private void sendMessage(){
 		if (taEdit.getText().trim().length() == 0)
@@ -113,6 +140,7 @@ public class ChatSceneController implements Initializable {
 	private void updateUI(){
 		//update Username label when signing
 		lblUsername.setText(userInfo.getFullName());
+		
 	}
 
 	@Override
@@ -120,5 +148,6 @@ public class ChatSceneController implements Initializable {
 		//update UI
 		updateUI();	
 	}
+	
 	
 }
