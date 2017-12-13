@@ -101,7 +101,7 @@
             <JFXListView fx:id="lvMessage" layoutX="19.0" layoutY="82.0" prefHeight="606.0" prefWidth="487.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="82.0" />
             <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="509.0" layoutY="82.0" prefHeight="606.0" prefWidth="403.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="509.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
                <children>
-                  <Canvas height="605.0" width="403.0" />
+                  <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="403.0" />
                </children>
             </JFXDrawer>
          </children>
