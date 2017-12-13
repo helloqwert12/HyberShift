@@ -19,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -43,7 +45,6 @@ public class RegisterController implements Initializable{
 	@FXML private TextField tfEmailLogin;
 	@FXML private TextField tfPasswordLogin;
 	@FXML private Button btnSignin;
-	@FXML private Hyperlink hlRegister;
 
 	ChatSocket chatsocket;
 	Runnable socketRunnable;
@@ -153,6 +154,14 @@ public class RegisterController implements Initializable{
 			}
 		});
 	}
+	@FXML
+	public void onKeyPressedBtnSigin(KeyEvent keyevent){
+		if (keyevent.getCode().equals(KeyCode.ENTER))
+        {			
+			System.out.println("BtnSigin clicked");
+			Authentication();
+        }
+	}
 	
 	@FXML
 	public void onActionBtnSigin(){
@@ -162,28 +171,7 @@ public class RegisterController implements Initializable{
 			return;
 		}
 		
-		//Convert to JSONObject
-		JSONObject userjson = new JSONObject();
-		try {
-			userjson.put("email", tfEmailLogin.getText());
-			userjson.put("password", tfPasswordLogin.getText());
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		socket.emit("authentication", userjson);
-	}
-	
-	@FXML
-	public void onActionHyberlinkRegister(){
-		try {
-			Main.showRegisterScene();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Authentication();
 	}
 	
 	public void initSocket(){
@@ -256,17 +244,48 @@ public class RegisterController implements Initializable{
 			}
 		});
 	}
+	@FXML
+	public void onKeyPressedBtnConfirm(KeyEvent keyevent){
+		if (keyevent.getCode().equals(KeyCode.ENTER))
+        {	
+			System.out.println("BtnConfirm clicked");
+			pushData();	
+        }
+	}
 	
-	public void onActionBtnConfirm(){
+	public void onActionBtnConfirm(KeyEvent keyevent){
 		System.out.println("BtnConfirm clicked");
-		
+
 		if (!isValidRegister()){
 			new Alert(AlertType.WARNING, "Something went wrong with your information. Please check again").show();
 			return;
 		}
+		
+		//Push data
+		pushData();				
+	}
+	
+	private boolean isValidRegister(){
+		System.out.println(tfEmail.getText().trim().length());
+		if (tfEmail.getText().trim().length() == 0)
+			return false;
+		if (tfName.getText().trim().length() == 0)
+			return false;
+		if (tfPassword.getText().trim().length() == 0)
+			return false;
+		if (tfConfirmPassword.getText().trim().length() == 0)
+			return false;
+		if (tfPhoneNumber.getText().trim().length() == 0)
+			return false;
+		if (!tfPassword.getText().toString().equals(tfConfirmPassword.getText().toString()))
+			return false;
+		return true;
+	}
+	
+	public void pushData() {
 		//Push data
 		userInfo = UserInfo.getInstance();
-		
+			
 		userInfo.setEmail(tfEmail.getText().toString());
 		userInfo.setPassword(tfPassword.getText().toString());
 		userInfo.setPhone(tfPhoneNumber.getText().toString());
@@ -287,25 +306,20 @@ public class RegisterController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
 	}
 	
-	private boolean isValidRegister(){
-		System.out.println(tfEmail.getText().trim().length());
-		if (tfEmail.getText().trim().length() == 0)
-			return false;
-		if (tfName.getText().trim().length() == 0)
-			return false;
-		if (tfPassword.getText().trim().length() == 0)
-			return false;
-		if (tfConfirmPassword.getText().trim().length() == 0)
-			return false;
-		if (tfPhoneNumber.getText().trim().length() == 0)
-			return false;
-		if (!tfPassword.getText().toString().equals(tfConfirmPassword.getText().toString()))
-			return false;
-		return true;
+	public void Authentication() {
+		//Convert to JSONObject
+		JSONObject userjson = new JSONObject();
+		try {
+			userjson.put("email", tfEmailLogin.getText());
+			userjson.put("password", tfPasswordLogin.getText());
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		socket.emit("authentication", userjson);
 	}
-	
-	
 }

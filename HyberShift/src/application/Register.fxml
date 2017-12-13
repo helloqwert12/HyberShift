@@ -29,27 +29,27 @@
             </JFXButton>
             <AnchorPane fx:id="pn_Register" layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
                <children>
-                  <JFXTextField fx:id="tfEmail" layoutX="25.0" layoutY="109.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
+                  <JFXTextField fx:id="tfEmail" layoutX="25.0" layoutY="109.0" onKeyPressed="#onKeyPressedBtnConfirm" prefHeight="40.0" prefWidth="300.0" promptText="Email">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="tfName" layoutX="26.0" layoutY="161.0" prefHeight="40.0" prefWidth="300.0" promptText="Name">
+                  <JFXTextField fx:id="tfName" layoutX="26.0" layoutY="161.0" onKeyPressed="#onKeyPressedBtnConfirm" prefHeight="40.0" prefWidth="300.0" promptText="Name">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="tfPhoneNumber" layoutX="26.0" layoutY="219.0" prefHeight="40.0" prefWidth="300.0" promptText="Phone number">
+                  <JFXTextField fx:id="tfPhoneNumber" layoutX="26.0" layoutY="219.0" onKeyPressed="#onKeyPressedBtnConfirm" prefHeight="40.0" prefWidth="300.0" promptText="Phone number">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXPasswordField fx:id="tfPassword" layoutX="26.0" layoutY="273.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
+                  <JFXPasswordField fx:id="tfPassword" layoutX="26.0" layoutY="273.0" onKeyPressed="#onKeyPressedBtnConfirm" prefHeight="40.0" prefWidth="300.0" promptText="Password">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXPasswordField>
-                  <JFXPasswordField fx:id="tfConfirmPassword" layoutX="26.0" layoutY="333.0" prefHeight="40.0" prefWidth="300.0" promptText="Confirm Password">
+                  <JFXPasswordField fx:id="tfConfirmPassword" layoutX="26.0" layoutY="333.0" onKeyPressed="#onKeyPressedBtnConfirm" prefHeight="40.0" prefWidth="300.0" promptText="Confirm Password">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -68,12 +68,12 @@
             </AnchorPane>
             <AnchorPane fx:id="pn_Login" layoutX="550.0" prefHeight="500.0" prefWidth="350.0" style="-fx-background-color: #ffff;">
                <children>
-                  <JFXTextField fx:id="tfEmailLogin" layoutX="25.0" layoutY="156.0" prefHeight="40.0" prefWidth="300.0" promptText="Email">
+                  <JFXTextField fx:id="tfEmailLogin" layoutX="25.0" layoutY="156.0" onKeyPressed="#onKeyPressedBtnSigin" prefHeight="40.0" prefWidth="300.0" promptText="Email">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXPasswordField fx:id="tfPasswordLogin" layoutX="25.0" layoutY="230.0" prefHeight="40.0" prefWidth="300.0" promptText="Password">
+                  <JFXPasswordField fx:id="tfPasswordLogin" layoutX="25.0" layoutY="230.0" onKeyPressed="#onKeyPressedBtnSigin" prefHeight="40.0" prefWidth="300.0" promptText="Password">
                      <font>
                         <Font size="14.0" />
                      </font>
