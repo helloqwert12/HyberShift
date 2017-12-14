@@ -13,8 +13,12 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.JFXButton;
 
 import chatsocket.ChatSocket;
+import dataobject.ListOnline;
 import dataobject.UserInfo;
+import dataobject.UserOnline;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -48,6 +52,9 @@ public class RegisterController implements Initializable{
 
 	ChatSocket chatsocket;
 	Runnable socketRunnable;
+	
+	//List online
+	ListOnline listOnline = ListOnline.getInstance();
 	
 	public RegisterController() {
 		initSocket();
@@ -85,6 +92,25 @@ public class RegisterController implements Initializable{
                     return;
                 }	
 				
+			}
+		}).on("user_online", new Listener() {	
+			@Override
+			public void call(Object... args) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					JSONObject object = (JSONObject)args[0];
+					try {
+						String name = object.getString("fullname");
+						String email = object.getString("email");
+						listOnline.addUserOnline(new UserOnline(name, email));
+						System.out.println(listOnline.getListName());
+						
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}	
+				}
+			});	
 			}
 		});
 	}
@@ -301,7 +327,7 @@ public class RegisterController implements Initializable{
 			userjson.put("linkavatar", userInfo.getLinkAvatar());
 			
 			socket.emit("register", userjson);
-			//Main.showMainFromRegister();
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

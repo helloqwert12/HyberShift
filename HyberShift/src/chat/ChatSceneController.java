@@ -4,6 +4,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 import org.json.JSONArray;
@@ -11,7 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,8 +41,10 @@ import com.github.nkzawa.emitter.Emitter.Listener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.*;
 
+import dataobject.ListOnline;
 import dataobject.SenderTyping;
 import dataobject.UserInfo;
+import dataobject.UserOnline;
 
 public class ChatSceneController implements Initializable {
 	//JFX controls
@@ -45,6 +54,8 @@ public class ChatSceneController implements Initializable {
     @FXML private JFXButton btnRealtimeBoard;
     @FXML private JFXDrawer drawer;
     @FXML private Canvas canvas;
+    @FXML private JFXListView<String> lvRoom;
+    @FXML private JFXListView<String> lvOnline;
     
     //Board drawing
     GraphicsContext gc;
@@ -56,6 +67,9 @@ public class ChatSceneController implements Initializable {
 	Socket socket;
 	UserInfo userInfo = UserInfo.getInstance();
 	ObservableList<String> itemList = FXCollections.observableArrayList();
+	
+	//list user online
+	ListOnline listOnline = ListOnline.getInstance();
 	
 	//typing event
 	boolean isSetTyping = false;
@@ -87,7 +101,7 @@ public class ChatSceneController implements Initializable {
 										int indexToAdd = getMinIndexFrom(listTyping);
 										removeSenderFrom(listTyping, sender, lvMessage);
 										lvMessage.getItems().add(indexToAdd, msg);
-										updateSenderFrom(listTyping, indexToAdd);
+										increaseIndexFrom(listTyping, indexToAdd);
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -124,6 +138,65 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 			}
+		}).on("done_typing", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {		
+						String sender = (String)args[0];
+						System.out.println("--listTyping: " + listTyping);
+						int index = getIndexFromName(listTyping, sender);
+						if (index < 0) return;
+						System.out.println("--index of sender in listTyping: " + index);
+						removeSenderFrom(listTyping, sender, lvMessage);
+						System.out.println("listTyping after remove: " + listTyping);
+						decreaseIndexFrom(listTyping, index);
+						System.out.println("listTyping after decrease index: " + listTyping);
+					}
+				});
+			}
+		}).on("user_online", new Listener() {	
+			@Override
+			public void call(Object... args) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					JSONObject object = (JSONObject)args[0];
+					try {
+						String name = object.getString("fullname");
+						String email = object.getString("email");
+						listOnline.addUserOnline(new UserOnline(name, email));
+						//update list view online
+						ObservableList<String> olistOnline = FXCollections.observableArrayList(listOnline.getListName());
+						System.out.println(olistOnline);
+						lvOnline.setItems(olistOnline);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}	
+				}
+			});
+			}
+		}).on("user_offline", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {	
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String name = object.getString("fullname");
+							listOnline.removeUserOnline(name);
+							//update list view online
+							ObservableList<String> olistOnline = FXCollections.observableArrayList(listOnline.getListName());
+							System.out.println(olistOnline);
+							lvOnline.setItems(olistOnline);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}		
+					}
+				});
+			}
 		});
 		
 		//penDrawing
@@ -140,7 +213,6 @@ public class ChatSceneController implements Initializable {
 		sendMessage();
 		isSetTyping = false;
 		taEdit.clear();
-		socket.emit("done_typing", userInfo.getFullName());
 	}
 	
 	@FXML
@@ -150,7 +222,6 @@ public class ChatSceneController implements Initializable {
 			sendMessage();
 			isSetTyping = false;
 			taEdit.clear();
-			socket.emit("done_typing", userInfo.getFullName());
         }
 	}
 	
@@ -204,8 +275,16 @@ public class ChatSceneController implements Initializable {
     @FXML
     void onKeyTypedTaEdit(KeyEvent event) {
     	if (!isSetTyping && !event.getCode().equals(KeyCode.ENTER) && taEdit.getText().length() > 0){
+    		System.out.println("is_typing");
     		isSetTyping = true;
     		socket.emit("is_typing", userInfo.getFullName());
+    	}
+    	else{
+    		if (taEdit.getText().length() <= 0){
+    			System.out.println("done_typing");
+    			isSetTyping = false;
+    			socket.emit("done_typing", userInfo.getFullName());
+    		}
     	}
     }
 
@@ -238,6 +317,10 @@ public class ChatSceneController implements Initializable {
 		
 		//set canvas
 		gc = canvas.getGraphicsContext2D();
+		
+		//update list online to lv
+		ObservableList<String> olist = FXCollections.observableArrayList(listOnline.getListName());
+		lvOnline.setItems(olist);
 	}
 
 	@Override
@@ -303,10 +386,27 @@ public class ChatSceneController implements Initializable {
 		}
 	}
 	
-	private void updateSenderFrom(ArrayList<SenderTyping> list, int id){
+	private int getIndexFromName(ArrayList<SenderTyping> list, String sender){
+		for(int i=0; i<list.size(); i++){
+			if (list.get(i).getSenderName().equals(sender)){
+				return list.get(i).getIndex();
+			}
+		}
+		return -1;
+	}
+	
+	private void increaseIndexFrom(ArrayList<SenderTyping> list, int id){
 		for(int i=0; i<list.size(); i++){
 			if (list.get(i).getIndex() >= id){
 				list.get(i).setIndex(list.get(i).getIndex() + 1);
+			}
+		}
+	}
+	
+	private void decreaseIndexFrom(ArrayList<SenderTyping> list, int id){
+		for(int i=0; i<list.size(); i++){
+			if (list.get(i).getIndex() >= id){
+				list.get(i).setIndex(list.get(i).getIndex() - 1);
 			}
 		}
 	}
