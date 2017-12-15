@@ -41,22 +41,22 @@ public class Main extends Application {
 			this.stg = primaryStage;
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			
-//			//Kéo thả, di chuyển frame
-//		    root.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
-//		        @Override
-//		        public void handle(javafx.scene.input.MouseEvent event) {
-//		            xOffset = event.getSceneX();
-//		            yOffset = event.getSceneY();
-//		        }
-//		    });
-//
-//		    root.setOnMouseDragged(new EventHandler<javafx.scene.input.MouseEvent>() {
-//		        @Override
-//		        public void handle(javafx.scene.input.MouseEvent event) {
-//		            primaryStage.setX(event.getScreenX() - xOffset);
-//		            primaryStage.setY(event.getScreenY() - yOffset);
-//		        }
-//		    });
+			//Kéo thả, di chuyển frame
+		    root.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
+		        @Override
+		        public void handle(javafx.scene.input.MouseEvent event) {
+		            xOffset = event.getSceneX();
+		            yOffset = event.getSceneY();
+		        }
+		    });
+
+		    root.setOnMouseDragged(new EventHandler<javafx.scene.input.MouseEvent>() {
+		        @Override
+		        public void handle(javafx.scene.input.MouseEvent event) {
+		            primaryStage.setX(event.getScreenX() - xOffset);
+		            primaryStage.setY(event.getScreenY() - yOffset);
+		        }
+		    });
 			
 			Scene scene  = new Scene(root);
 			scene.setFill(Color.TRANSPARENT);

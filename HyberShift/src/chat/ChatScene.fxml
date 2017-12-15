@@ -102,12 +102,16 @@
                   <JFXTextField fx:id="taEdit" layoutX="32.0" layoutY="31.0" onKeyPressed="#onKeyPressedBtnSentClick" onKeyTyped="#onKeyTypedTaEdit" prefHeight="31.0" prefWidth="659.0" promptText="Insert message . . ." style="-fx-background-color: gray;" />
                </children>
             </AnchorPane>
-            <JFXListView fx:id="lvMessage" layoutX="19.0" layoutY="82.0" prefHeight="606.0" prefWidth="487.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="82.0" />
             <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="509.0" layoutY="82.0" prefHeight="606.0" prefWidth="403.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="509.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
                <children>
                   <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="403.0" />
                </children>
             </JFXDrawer>
+            <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="497.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="418.0" AnchorPane.topAnchor="82.0">
+               <children>
+                  <JFXListView fx:id="lvMessage" layoutX="-1.0" prefHeight="606.0" prefWidth="497.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
 	</children>
