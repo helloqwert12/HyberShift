@@ -38,12 +38,14 @@
          </padding>
          <children>
             <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="21.0" layoutY="100.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0" />
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" prefHeight="65.0" prefWidth="65.0" />
-            <ImageView fitHeight="52.0" fitWidth="53.0" layoutX="29.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icon/create_group.png" />
-               </image>
-            </ImageView>
+            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" prefHeight="65.0" prefWidth="65.0">
+               <graphic>
+                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icon/create_group.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
             <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="35.0" layoutY="66.0" size="48" />
          </children>
       </AnchorPane>
@@ -97,7 +99,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXTextField fx:id="taEdit" layoutX="32.0" layoutY="31.0" onKeyPressed="#onKeyPressedBtnSentClick" onKeyTyped="#onKeyTypedTaEdit" prefHeight="31.0" prefWidth="659.0" promptText="Insert message . . ." />
+                  <JFXTextField fx:id="taEdit" layoutX="32.0" layoutY="31.0" onKeyPressed="#onKeyPressedBtnSentClick" onKeyTyped="#onKeyTypedTaEdit" prefHeight="31.0" prefWidth="659.0" promptText="Insert message . . ." style="-fx-background-color: gray;" />
                </children>
             </AnchorPane>
             <JFXListView fx:id="lvMessage" layoutX="19.0" layoutY="82.0" prefHeight="606.0" prefWidth="487.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="82.0" />
