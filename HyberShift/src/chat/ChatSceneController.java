@@ -42,6 +42,8 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.*;
 
 import dataobject.ListOnline;
+import dataobject.ListRoom;
+import dataobject.Room;
 import dataobject.SenderTyping;
 import dataobject.UserInfo;
 import dataobject.UserOnline;
@@ -70,6 +72,9 @@ public class ChatSceneController implements Initializable {
 	
 	//list user online
 	ListOnline listOnline = ListOnline.getInstance();
+	
+	//list room
+	ListRoom listRoom = ListRoom.getInstance();
 	
 	//typing event
 	boolean isSetTyping = false;
@@ -197,6 +202,29 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 			}
+		}).on("room_created", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String roomId = object.getString("room_id");
+							String roomName = object.getString("room_name");
+							System.out.println("roomName: " + roomName);
+							listRoom.addRoom(new Room(roomId, roomName, null));
+							ObservableList<String> oroomName = listRoom.getOListRoomName();
+							System.out.println(oroomName);
+							lvRoom.setItems(oroomName);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				
+			}
 		});
 		
 		//penDrawing
@@ -321,6 +349,11 @@ public class ChatSceneController implements Initializable {
 		//update list online to lv
 		ObservableList<String> olist = FXCollections.observableArrayList(listOnline.getListName());
 		lvOnline.setItems(olist);
+		
+		//update list room to lv
+		ObservableList<String> orlist = listRoom.getOListRoomName();
+		System.out.println("list room name: " + listRoom.getListRoomName());
+		lvRoom.setItems(orlist);
 	}
 
 	@Override

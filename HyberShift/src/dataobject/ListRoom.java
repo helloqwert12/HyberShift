@@ -51,6 +51,11 @@ public class ListRoom {
 	}
 	
 	public void addRoom(Room room){
+		//kiểm tra trùng trước khi add
+		for(int i=0; i<list.size(); i++){
+			if (list.get(i).getName().equals(room.getName()))
+				return;
+		}
 		list.add(room);
 	}
 	

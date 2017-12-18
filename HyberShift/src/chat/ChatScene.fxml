@@ -38,7 +38,7 @@
          </padding>
          <children>
             <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="21.0" layoutY="100.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0" />
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" prefHeight="65.0" prefWidth="65.0">
+            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0">
                <graphic>
                   <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                      <image>

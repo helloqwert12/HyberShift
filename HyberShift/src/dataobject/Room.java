@@ -11,7 +11,8 @@ public class Room {
 		members = new ArrayList<>();
 	}
 	
-	public Room(String name, ArrayList<String> members){
+	public Room(String id, String name, ArrayList<String> members){
+		this.id = id;
 		this.name = name;
 		this.members = members;
 	}

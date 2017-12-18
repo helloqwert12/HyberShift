@@ -82,7 +82,28 @@ public class CreateRoomSceneController {
 					e.printStackTrace();
 				}
 			}
-		});
+		}).on("room_created", new Listener() {	
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String roomId = object.getString("room_id");
+							String roomName = object.getString("room_name");
+							System.out.println("roomName: " + roomName);
+							listRoom.addRoom(new Room(roomId, roomName, null));
+							System.out.println("Create room form: " + listRoom.getListRoomName());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				
+			}
+		});;
 		
 	}
 	

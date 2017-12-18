@@ -14,6 +14,8 @@ import com.jfoenix.controls.JFXButton;
 
 import chatsocket.ChatSocket;
 import dataobject.ListOnline;
+import dataobject.ListRoom;
+import dataobject.Room;
 import dataobject.UserInfo;
 import dataobject.UserOnline;
 import javafx.application.Platform;
@@ -55,6 +57,9 @@ public class RegisterController implements Initializable{
 	
 	//List online
 	ListOnline listOnline = ListOnline.getInstance();
+	
+	//List room
+	ListRoom listRoom = ListRoom.getInstance();
 	
 	public RegisterController() {
 		initSocket();
@@ -104,13 +109,34 @@ public class RegisterController implements Initializable{
 						String name = object.getString("fullname");
 						String email = object.getString("email");
 						listOnline.addUserOnline(new UserOnline(name, email));
-						System.out.println(listOnline.getListName());
+						System.out.println("Register form: " + listOnline.getListName());
 						
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}	
 				}
 			});	
+			}
+		}).on("room_created", new Listener() {	
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String roomId = object.getString("room_id");
+							String roomName = object.getString("room_name");
+							System.out.println("roomName: " + roomName);
+							listRoom.addRoom(new Room(roomId, roomName, null));
+							System.out.println("Register form: " + listRoom.getListRoomName());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				
 			}
 		});
 	}
