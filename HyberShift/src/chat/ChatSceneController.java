@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -41,8 +44,10 @@ import com.github.nkzawa.emitter.Emitter.Listener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.jfoenix.controls.*;
 
+import dataobject.ListMessage;
 import dataobject.ListOnline;
 import dataobject.ListRoom;
+import dataobject.Message;
 import dataobject.Room;
 import dataobject.SenderTyping;
 import dataobject.UserInfo;
@@ -53,6 +58,7 @@ public class ChatSceneController implements Initializable {
 	@FXML JFXListView<String> lvMessage;
 	@FXML JFXTextField taEdit;
 	@FXML Label lblUsername;
+	@FXML Label lblRoomName;
     @FXML private JFXButton btnRealtimeBoard;
     @FXML private JFXDrawer drawer;
     @FXML private Canvas canvas;
@@ -75,6 +81,10 @@ public class ChatSceneController implements Initializable {
 	
 	//list room
 	ListRoom listRoom = ListRoom.getInstance();
+	Room currRoom; // current Room
+	
+	//list message
+	ListMessage listMessage = ListMessage.getInstance();
 	
 	//typing event
 	boolean isSetTyping = false;
@@ -87,36 +97,46 @@ public class ChatSceneController implements Initializable {
 		socket = chatsocket.getSocket();
 			
 		//set event for socket
-		socket.on("new_message", new Listener() {
-			
-			@Override
-			public void call(Object... args) {
-				Platform.runLater(new Runnable() {	
-					@Override
-					public void run() {
-						JSONObject msgjson = (JSONObject) args[0];		
-							//Update listview message
-							Platform.runLater(new Runnable() {			
-								@Override
-								public void run() {
-									String sender;
-									try {
-										sender = msgjson.getString("sender");
-										String msg = sender + " : " + msgjson.getString("message");
-										int indexToAdd = getMinIndexFrom(listTyping);
-										removeSenderFrom(listTyping, sender, lvMessage);
-										lvMessage.getItems().add(indexToAdd, msg);
-										increaseIndexFrom(listTyping, indexToAdd);
-									} catch (JSONException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							});	
-					}
-				});			
-			}
-		}).on("new_drawing", new Listener() {
+//		socket.on("new_message", new Listener() {
+//			
+//			@Override
+//			public void call(Object... args) {
+//				Platform.runLater(new Runnable() {	
+//					@Override
+//					public void run() {
+//						JSONObject msgjson = (JSONObject) args[0];		
+//						//Update listview message
+//						Platform.runLater(new Runnable() {			
+//							@Override
+//							public void run() {
+//								try {
+//									String sender = msgjson.getString("sender");
+//									String msg = sender + " : " + msgjson.getString("message");
+//									String id = msgjson.getString("id");
+//									if (id.equals("public"))
+//										System.out.println("public has new message");
+//									else{
+//										Room tempRoom = listRoom.getRoomById(id);
+//										System.out.println(tempRoom.getName() + " has new message");
+//										// if user is in current room, then display
+//										if (currRoom.getId().equals(id)){
+//											int indexToAdd = getMinIndexFrom(listTyping);
+//											removeSenderFrom(listTyping, sender, lvMessage);
+//											lvMessage.getItems().add(indexToAdd, msg);
+//											increaseIndexFrom(listTyping, indexToAdd);
+//										}
+//									}
+//								} catch (JSONException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//						});	
+//					}
+//				});			
+//			}
+//		})
+		socket.on("new_drawing", new Listener() {
 			@Override
 			public void call(Object... args) {
 				Platform.runLater(new Runnable() {
@@ -136,10 +156,20 @@ public class ChatSceneController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						String senderName = (String)args[0];
-						lvMessage.getItems().add(senderName + " is typing . . .");
-						int index = lvMessage.getItems().size() - 1;
-						listTyping.add(new SenderTyping(senderName, index));
+						JSONObject object = (JSONObject)args[0];
+						
+						try {
+							String senderName = object.getString("sender");
+							String id = object.getString("id");
+							if (currRoom.getId().equals(id)){
+								lvMessage.getItems().add(senderName + " is typing . . .");
+								int index = lvMessage.getItems().size() - 1;
+								listTyping.add(new SenderTyping(senderName, index));
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
 					}
 				});
 			}
@@ -149,15 +179,21 @@ public class ChatSceneController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {		
-						String sender = (String)args[0];
-						System.out.println("--listTyping: " + listTyping);
-						int index = getIndexFromName(listTyping, sender);
-						if (index < 0) return;
-						System.out.println("--index of sender in listTyping: " + index);
-						removeSenderFrom(listTyping, sender, lvMessage);
-						System.out.println("listTyping after remove: " + listTyping);
-						decreaseIndexFrom(listTyping, index);
-						System.out.println("listTyping after decrease index: " + listTyping);
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String sender = object.getString("sender");
+							String id = object.getString("id");
+							if (currRoom.getId().equals(id)){
+								int index = getIndexFromName(listTyping, sender);
+								if (index < 0) return;
+								
+								removeSenderFrom(listTyping, sender, lvMessage);
+								decreaseIndexFrom(listTyping, index);
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
 					}
 				});
 			}
@@ -224,6 +260,34 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 				
+			}
+		}).on("room_change", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						lvMessage.getItems().clear();
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String id = object.getString("id");
+							String sender = object.getString("sender");
+							String message = object.getString("message");
+							int timestamp = object.getInt("timestamp");
+							if (currRoom.getId().equals(id)){
+								Message msg = new Message(id, message, sender, timestamp);
+								listMessage.addMessage(msg);
+								
+								lvMessage.setItems(listMessage.getOListMessage());
+							}
+							
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+				});
 			}
 		});
 		
@@ -303,15 +367,39 @@ public class ChatSceneController implements Initializable {
     @FXML
     void onKeyTypedTaEdit(KeyEvent event) {
     	if (!isSetTyping && !event.getCode().equals(KeyCode.ENTER) && taEdit.getText().length() > 0){
-    		System.out.println("is_typing");
     		isSetTyping = true;
-    		socket.emit("is_typing", userInfo.getFullName());
+    		JSONObject object = new JSONObject();
+    		try {
+				object.put("sender", userInfo.getFullName());
+				if (currRoom == null)
+					object.put("id", "public");
+				else
+					object.put("id", currRoom.getId());
+				
+				socket.emit("is_typing", object);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
     	}
     	else{
     		if (taEdit.getText().length() <= 0){
     			System.out.println("done_typing");
     			isSetTyping = false;
-    			socket.emit("done_typing", userInfo.getFullName());
+    			JSONObject object = new JSONObject();
+        		try {
+    				object.put("sender", userInfo.getFullName());
+    				if (currRoom == null)
+    					object.put("id", "public");
+    				else
+    					object.put("id", currRoom.getId());
+    				
+    				socket.emit("done_typing", object);
+    			} catch (JSONException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
     		}
     	}
     }
@@ -326,6 +414,11 @@ public class ChatSceneController implements Initializable {
 		try {
 			msgjson.put("sender", userInfo.getFullName());
 			msgjson.put("message", taEdit.getText().toString());
+			msgjson.put("timestamp", Calendar.getInstance().getTimeInMillis());
+			if (currRoom == null)
+				msgjson.put("id", "public");
+			else
+				msgjson.put("id", currRoom.getId());
 			
 			// Emit to server
 			socket.emit("new_message", msgjson);
@@ -340,6 +433,8 @@ public class ChatSceneController implements Initializable {
 	}
 	
 	private void updateUI(){
+		lblRoomName.setText("Hybershift public chat");
+		
 		//update Username label when signing
 		lblUsername.setText(userInfo.getFullName());
 		
@@ -354,6 +449,34 @@ public class ChatSceneController implements Initializable {
 		ObservableList<String> orlist = listRoom.getOListRoomName();
 		System.out.println("list room name: " + listRoom.getListRoomName());
 		lvRoom.setItems(orlist);
+		//item change event
+		lvRoom.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				if (newValue.equals(oldValue))
+					return;
+				
+				//get room by name
+				currRoom = listRoom.getRoomFromName(newValue);
+				System.out.println("Current room: " + currRoom.getName());
+				//System.out.println("Room id: " + currRoom.getId());
+				
+				//emit to server to get message
+				socket.emit("room_change", currRoom.getId());
+				
+				//update UI room
+				lblRoomName.setText(currRoom.getName());
+				
+				//clear lvMessage
+				lvMessage.getItems().clear();
+				
+				//clear listMessage
+				listMessage.getList().clear();
+			}
+
+		});
 	}
 
 	@Override

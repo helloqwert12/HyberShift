@@ -43,6 +43,24 @@ public class ListRoom {
 		return new ArrayList<>();
 	}
 	
+	public Room getRoomFromName(String roomName){
+		for(int i=0; i<list.size(); i++){
+			Room tempRoom = list.get(i);
+			if (tempRoom.getName().equals(roomName))
+				return tempRoom;
+		}
+		return null;
+	}
+	
+	public Room getRoomById(String id){
+		for(int i=0; i<list.size(); i++){
+			Room tempRoom = list.get(i);
+			if (tempRoom.getId().equals(id))
+				return tempRoom;
+		}
+		return null;
+	}
+	
 	public ArrayList<String> getMembersFrom(int indexRoom){
 		if (indexRoom >= list.size())
 			return new ArrayList<>();

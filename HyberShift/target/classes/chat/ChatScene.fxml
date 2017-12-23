@@ -72,7 +72,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <Label layoutX="55.0" layoutY="21.0" prefHeight="35.0" prefWidth="291.0" text="Hybershift public chat&#10;" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="21.0">
+                  <Label fx:id="lblRoomName" layoutX="55.0" layoutY="21.0" prefHeight="35.0" prefWidth="291.0" text="Hybershift public chat&#10;" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="21.0">
                      <font>
                         <Font size="24.0" />
                      </font>
