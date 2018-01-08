@@ -97,55 +97,67 @@ public class ChatSceneController implements Initializable {
 		socket = chatsocket.getSocket();
 			
 		//set event for socket
-//		socket.on("new_message", new Listener() {
-//			
-//			@Override
-//			public void call(Object... args) {
-//				Platform.runLater(new Runnable() {	
-//					@Override
-//					public void run() {
-//						JSONObject msgjson = (JSONObject) args[0];		
-//						//Update listview message
-//						Platform.runLater(new Runnable() {			
-//							@Override
-//							public void run() {
-//								try {
-//									String sender = msgjson.getString("sender");
-//									String msg = sender + " : " + msgjson.getString("message");
-//									String id = msgjson.getString("id");
-//									if (id.equals("public"))
-//										System.out.println("public has new message");
-//									else{
-//										Room tempRoom = listRoom.getRoomById(id);
-//										System.out.println(tempRoom.getName() + " has new message");
-//										// if user is in current room, then display
-//										if (currRoom.getId().equals(id)){
-//											int indexToAdd = getMinIndexFrom(listTyping);
-//											removeSenderFrom(listTyping, sender, lvMessage);
-//											lvMessage.getItems().add(indexToAdd, msg);
-//											increaseIndexFrom(listTyping, indexToAdd);
-//										}
-//									}
-//								} catch (JSONException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-//							}
-//						});	
-//					}
-//				});			
-//			}
-//		})
-		socket.on("new_drawing", new Listener() {
+		socket.on("new_message", new Listener() {
+			
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {	
+					@Override
+					public void run() {
+						JSONObject msgjson = (JSONObject) args[0];		
+						//Update listview message
+						Platform.runLater(new Runnable() {			
+							@Override
+							public void run() {
+								try {
+									String sender = msgjson.getString("sender");
+									String msg = sender + " : " + msgjson.getString("message");
+									String id = msgjson.getString("id");
+									if (id.equals("public"))
+										System.out.println("public has new message");
+									else{
+										Room tempRoom = listRoom.getRoomById(id);
+										System.out.println(tempRoom.getName() + " has new message");
+										// if user is in current room, then display
+										if (currRoom.getId().equals(id)){
+											int indexToAdd = getMinIndexFrom(listTyping);
+											removeSenderFrom(listTyping, sender, lvMessage);
+											lvMessage.getItems().add(indexToAdd, msg);
+											increaseIndexFrom(listTyping, indexToAdd);
+										}
+									}
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						});	
+					}
+				});			
+			}
+		})
+		.on("new_drawing", new Listener() {
 			@Override
 			public void call(Object... args) {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						JSONArray jsonarr = (JSONArray)args[0];
-						ArrayList<Point> listPoints = convertJsArrToLstPnt(jsonarr);
-						penDrawing.setListPoints(listPoints);
-						penDrawing.draw(gc);		
+						JSONObject object = (JSONObject)args[0];
+						String roomId;
+						try {
+							roomId = object.getString("room_id");
+							if (currRoom.getId().equals(roomId)){
+								if (drawer.isHidden()) return;
+								JSONArray jsonarr = object.getJSONArray("points");
+								ArrayList<Point> listPoints = convertJsArrToLstPnt(jsonarr);
+								penDrawing.setListPoints(listPoints);
+								penDrawing.draw(gc);		
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 					}
 				});
 				
@@ -354,9 +366,25 @@ public class ChatSceneController implements Initializable {
     	penDrawing.addPoint(new Point((int)event.getX(), (int)event.getY()));
     	penDrawing.draw(gc);
     	drawState = DrawState.ON_DRAW;
-    	//emit to server
-    	JSONArray jsonArrPoints = convertLstPntToJsArr(penDrawing.getListPoints());
-    	socket.emit("new_drawing", jsonArrPoints);
+    	JSONObject object = new JSONObject();
+    	try {
+			object.put("room_id", currRoom.getId());
+			//emit to server
+	    	JSONArray jsonArrPoints = convertLstPntToJsArr(penDrawing.getListPoints());
+	    	object.put("points", jsonArrPoints);
+	    	socket.emit("new_drawing", object);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    }
+    
+    @FXML
+    void onMousePressedCanvas(MouseEvent event) {
+    	if (drawer.isHidden()) return;
+    	penDrawing.clear();
     }
     
     @FXML
