@@ -6,7 +6,7 @@ public class UserInfo {
 	private String password;
 	private String phone;
 	private String fullName;
-	private String linkAvatar;
+	private String avatarString;
 	private static UserInfo instance = null;
 	
 	public UserInfo(){
@@ -34,12 +34,12 @@ public class UserInfo {
 	public String getPassword() { return password; }
 	public String getPhone() { return phone; }
 	public String getFullName() { return fullName; }
-	public String getLinkAvatar() { return linkAvatar;}
+	public String getAvatarString() { return avatarString;}
 	
 	public void setUserid(String userid) { this.userid = userid; }
 	public void setEmail(String email) { this.email = email; }
 	public void setPassword(String password) { this.password = password; }
 	public void setPhone(String phone) { this.phone = phone; }
 	public void setFullName(String fullName) { this.fullName = fullName; }
-	public void setLinkAvatar(String linkAvatar) { this.linkAvatar = linkAvatar; }
+	public void setAvatarString(String avatarString) { this.avatarString = avatarString; }
 }

@@ -101,7 +101,7 @@ public class Main extends Application {
 		       e.printStackTrace();
 		    }
 	}
-	
+		
 	public static void showMainChatScene(){
 		try {
 		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/chat/ChatScene.fxml"));

@@ -7,10 +7,12 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
@@ -24,9 +26,11 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Line endX="100.0" layoutX="168.0" layoutY="77.0" startX="-100.0" stroke="#e8dbdb" />
+            <Line endX="100.0" layoutX="168.0" layoutY="80.0" startX="-100.0" stroke="#e8dbdb" />
             <JFXListView fx:id="lvRoom" layoutX="29.0" layoutY="88.0" prefHeight="277.0" prefWidth="282.0" style="-fx-background-color: #011640;" />
-            <JFXListView fx:id="lvOnline" layoutX="33.0" layoutY="398.0" prefHeight="336.0" prefWidth="282.0" style="-fx-background-color: #011640;" />
+            <JFXListView fx:id="lvOnline" layoutX="33.0" layoutY="398.0" prefHeight="120.0" prefWidth="282.0" style="-fx-background-color: #011640;" />
+            <ImageView fx:id="imgview" fitHeight="184.0" fitWidth="242.0" layoutX="41.0" layoutY="558.0" pickOnBounds="true" preserveRatio="true" />
+            <Circle fx:id="cimgAvatar" fill="DODGERBLUE" layoutX="74.0" layoutY="42.0" radius="32.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -47,6 +51,8 @@
                   </ImageView>
                </graphic></JFXButton>
             <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="35.0" layoutY="66.0" size="48" />
+            <Button fx:id="btnImage" layoutX="27.0" layoutY="447.0" mnemonicParsing="false" onAction="#onBtnImageAction" text="Button" />
+            <Button fx:id="btnChooseImg" layoutX="27.0" layoutY="377.0" mnemonicParsing="false" onAction="#onBtnChooseImgAction" text="Image..." />
          </children>
       </AnchorPane>
       
@@ -54,7 +60,7 @@
          <children>
             <AnchorPane layoutX="11.0" prefHeight="78.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 0 0 10 10;" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="738.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="6.0">
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="692.0" layoutY="5.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="151.0" AnchorPane.topAnchor="5.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -63,7 +69,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="666.0" layoutY="6.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="177.0" AnchorPane.topAnchor="6.0">
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="620.0" layoutY="5.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="223.0" AnchorPane.topAnchor="5.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -77,11 +83,20 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="btnRealtimeBoard" contentDisplay="GRAPHIC_ONLY" layoutX="810.0" layoutY="7.0" onAction="#onActionBtnRealtimeBoardClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="7.0">
+                  <JFXButton fx:id="btnRealtimeBoard" contentDisplay="GRAPHIC_ONLY" layoutX="764.0" layoutY="6.0" onAction="#onActionBtnRealtimeBoardClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="6.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@icon/realtime_board.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="btnPlan" contentDisplay="GRAPHIC_ONLY" layoutX="829.0" layoutY="5.0" onAction="#onActionBtnPlanClick" prefHeight="65.0" prefWidth="65.0">
+                     <graphic>
+                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/plan.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -105,6 +120,35 @@
             <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="509.0" layoutY="82.0" prefHeight="606.0" prefWidth="403.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="509.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
                <children>
                   <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMousePressed="#onMousePressedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="403.0" />
+                  <AnchorPane fx:id="pnlPlan" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <JFXListView fx:id="lvPlan" layoutY="133.0" prefHeight="473.0" prefWidth="403.0" style="-fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="133.0" />
+                        <AnchorPane layoutX="76.0" layoutY="82.0" prefHeight="120.0" prefWidth="403.0" style="-fx-background-color: white; -fx-background-radius: 0 0 10 10;" AnchorPane.bottomAnchor="486.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <JFXButton fx:id="btnCreateTask" contentDisplay="GRAPHIC_ONLY" layoutX="314.0" layoutY="45.0" onAction="#onActionBtnCreateTaskClick" prefHeight="49.0" prefWidth="65.0">
+                                 <graphic>
+                                    <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icon/add.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <ImageView fitHeight="35.0" fitWidth="38.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icon/task.png" />
+                                 </image>
+                              </ImageView>
+                              <JFXTextField fx:id="tfNewTask" layoutX="72.0" layoutY="16.0" prefHeight="31.0" prefWidth="242.0" promptText="Enter a new task . . ." />
+                              <JFXTextField fx:id="tfPerformers" layoutX="72.0" layoutY="60.0" prefHeight="31.0" prefWidth="242.0" promptText="Enter performers . . ." />
+                              <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="17.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icon/perfromer.png" />
+                                 </image>
+                              </ImageView>
+                           </children></AnchorPane>
+                     </children>
+                  </AnchorPane>
                </children>
             </JFXDrawer>
             <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="497.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="418.0" AnchorPane.topAnchor="82.0">

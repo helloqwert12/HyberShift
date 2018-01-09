@@ -71,6 +71,10 @@ public class ListMessage {
 		return null;
 	}
 	
+	public ObservableList<Message> getOList(){
+		return FXCollections.observableArrayList(this.list);
+	}
+	
 	public ObservableList<String> getOListSender(){
 		ObservableList<String> olist = FXCollections.observableArrayList(this.getListSender());
 		return olist;

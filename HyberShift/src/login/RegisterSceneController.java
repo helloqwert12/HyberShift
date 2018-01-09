@@ -80,7 +80,7 @@ public class RegisterSceneController {
 			userjson.put("fullname", userInfo.getFullName());
 			userjson.put("password", userInfo.getPassword());
 			userjson.put("phone", userInfo.getPhone());
-			userjson.put("linkavatar", userInfo.getLinkAvatar());
+			userjson.put("linkavatar", userInfo.getAvatarString());
 				
 			socket.emit("register", userjson);
 			//Main.showMainFromRegister();
