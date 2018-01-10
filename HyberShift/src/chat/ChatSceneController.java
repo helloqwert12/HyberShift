@@ -89,6 +89,14 @@ public class ChatSceneController implements Initializable {
     @FXML private ImageView imgview;
     @FXML private Button btnChooseImg;
     
+    //Show notification
+    @FXML private Button btnShowNotification;
+    @FXML private AnchorPane pnlNotification;
+    
+    //Show room
+    @FXML private Button btnShowRoom;
+    @FXML private AnchorPane pnlRoom;
+    
     //Board drawing
     GraphicsContext gc;
     PenDrawing penDrawing;
@@ -431,6 +439,16 @@ public class ChatSceneController implements Initializable {
 		//isTying set
 		listTyping = new ArrayList<>();
 	}
+	
+	@FXML
+    void onActionBtnShowNotification(ActionEvent event) {
+		pnlNotification.toFront();
+    }
+	
+	@FXML
+    void onActionBtnShowRoom(ActionEvent event) {
+		pnlRoom.toFront();
+    }
 	
 	@FXML
 	public void onActionBtnSentClick(){

@@ -20,17 +20,25 @@
 	<children>
 	 <AnchorPane layoutX="109.0" layoutY="10.0" prefHeight="784.0" prefWidth="335.0" style="-fx-background-color: #011640; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-background-radius: 0 20 20 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="109.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fitHeight="54.0" fitWidth="62.0" layoutX="110.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="lblUsername" layoutX="115.0" layoutY="24.0" text="User name" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
             <Line endX="100.0" layoutX="168.0" layoutY="80.0" startX="-100.0" stroke="#e8dbdb" />
-            <JFXListView fx:id="lvRoom" layoutX="29.0" layoutY="88.0" prefHeight="277.0" prefWidth="282.0" style="-fx-background-color: #011640;" />
-            <JFXListView fx:id="lvOnline" layoutX="33.0" layoutY="398.0" prefHeight="120.0" prefWidth="282.0" style="-fx-background-color: #011640;" />
             <Circle fx:id="cimgAvatar" fill="DODGERBLUE" layoutX="74.0" layoutY="42.0" radius="32.0" stroke="BLACK" strokeType="INSIDE" />
             <ImageView fx:id="imgview" fitHeight="160.0" fitWidth="216.0" layoutX="65.0" layoutY="512.0" pickOnBounds="true" preserveRatio="true" />
+            <AnchorPane fx:id="pnlRoom" layoutX="40.0" layoutY="96.0" prefHeight="688.0" prefWidth="322.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="76.0">
+               <children>
+                  <JFXListView fx:id="lvRoom" prefHeight="277.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
+                  <JFXListView fx:id="lvOnline" layoutY="300.0" prefHeight="120.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="pnlNotification" layoutX="31.0" layoutY="95.0" prefHeight="641.0" prefWidth="291.0">
+               <children>
+                  <JFXListView fx:id="lvNotification" prefHeight="277.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
+               </children>
+            </AnchorPane>
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -41,8 +49,16 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="21.0" layoutY="100.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0" />
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="23.0" layoutY="105.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0">
+            <JFXButton fx:id="btnShowRoom" contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="153.0" onAction="#onActionBtnShowRoom" prefHeight="65.0" prefWidth="65.0">
+               <graphic>
+                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icon/room.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="219.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0">
                <graphic>
                   <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -53,6 +69,15 @@
             <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="35.0" layoutY="66.0" size="48" />
             <Button fx:id="btnImage" layoutX="27.0" layoutY="447.0" mnemonicParsing="false" onAction="#onBtnImageAction" text="Button" />
             <Button fx:id="btnChooseImg" layoutX="27.0" layoutY="377.0" mnemonicParsing="false" onAction="#onBtnChooseImgAction" text="Image..." />
+            <JFXButton fx:id="btnShowNotification" contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="85.0" onAction="#onActionBtnShowNotification" prefHeight="65.0" prefWidth="65.0">
+               <graphic>
+                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icon/notification.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
          </children>
       </AnchorPane>
       
