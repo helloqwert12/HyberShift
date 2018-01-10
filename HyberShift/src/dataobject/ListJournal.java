@@ -20,6 +20,10 @@ public class ListJournal {
 		list = new ArrayList<>();
 	}
 	
+	public ArrayList<Journal> getList(){
+		return list;
+	}
+	
 	public ArrayList<String> getListWork(){
 		ArrayList<String> result = new ArrayList<>();
 		for(int i=0; i<list.size(); i++){
