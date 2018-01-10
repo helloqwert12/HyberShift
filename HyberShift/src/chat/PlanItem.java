@@ -45,7 +45,7 @@ public class PlanItem {
     	lblPerformers.setText(perfomers);
     	cbDone.setSelected(isDone);
     	lblStartDay.setText(start);
-    	if (end == null)
+    	if (end == null || end == "0" || String.valueOf(end) == "0")
     		lblEndDay.setText("The task is on progress");
     	else
     		lblEndDay.setText(end);

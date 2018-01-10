@@ -30,5 +30,10 @@
     <artifactId>socket.io-client</artifactId>
     <version>0.5.2</version>
   </dependency>
+  <dependency>
+    <groupId>org.controlsfx</groupId>
+    <artifactId>controlsfx</artifactId>
+    <version>8.40.12</version>
+</dependency>
 </dependencies>
 </project>

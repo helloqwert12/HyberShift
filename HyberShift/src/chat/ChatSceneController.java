@@ -1,63 +1,41 @@
 package chat;
-
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.Buffer;
-import java.time.DayOfWeek;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Observable;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.control.textfield.AutoCompletionBinding.AutoCompletionEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -82,6 +60,7 @@ import dataobject.Room;
 import dataobject.SenderTyping;
 import dataobject.UserInfo;
 import dataobject.UserOnline;
+
 
 public class ChatSceneController implements Initializable {
 	//JFX controls
@@ -130,6 +109,9 @@ public class ChatSceneController implements Initializable {
 	
 	//list message
 	ListMessage listMessage = ListMessage.getInstance();
+	
+	//list journal
+	ListJournal listJournal = ListJournal.getInstance();
 	
 	//typing event
 	boolean isSetTyping = false;
@@ -369,6 +351,42 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 			}
+		}).on("create_task", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {	
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						Journal journal = new Journal();
+						try {
+							//if not the current room, then stop
+							if (!object.getString("room_id").equals(currRoom.getId()))
+									return;
+							
+							//format data from calendar
+							Date date = new Date(object.getInt("start_day"));
+							DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+							String dateFormatted = formatter.format(date);
+							
+							journal.setId(object.getString("task_id"));
+							journal.setWork(object.getString("work"));					
+							journal.setStartDay(dateFormatted);
+							journal.setEndDay(String.valueOf(object.getInt("end_day")));						
+							journal.addPerformer(object.getString("performers"));
+							
+						
+							//add to listview
+							listJournal.addJournal(journal);
+							lvPlan.setItems(listJournal.getOListJournal());
+							
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+			}
 		});
 		
 		//penDrawing
@@ -519,6 +537,28 @@ public class ChatSceneController implements Initializable {
     @FXML
     void onActionBtnCreateTaskClick(ActionEvent event) {
     	// Xử lý task ở đây
+    	Journal journal = new Journal();
+    	
+    	//Check valid data
+    	if (tfNewTask.getText().replaceAll("\\s+","").split(",").toString().length() == 0 || 
+    			tfPerformers.getText().replaceAll("\\s+","").split(",").toString().length() == 0){
+    		new Alert(AlertType.WARNING, "Look like you don't complete all stuff!").show();
+    		return;
+    	}
+    	
+    	JSONObject object = new JSONObject();
+    	try {
+    		object.put("room_id", currRoom.getId().toString());	//use room id to push to database
+			object.put("work", tfNewTask.getText().toString());
+			object.put("performers", tfPerformers.getText().toString());
+			object.put("start_day", Calendar.getInstance().getTimeInMillis());
+			object.put("end_day", 0);
+			//emit to server
+			socket.emit("create_task", object);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	
@@ -629,6 +669,10 @@ public class ChatSceneController implements Initializable {
 			}
 
 		});
+		
+		
+		//auto complete for tfPerfomrer
+		//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
 	}
 
 	@Override
@@ -637,7 +681,6 @@ public class ChatSceneController implements Initializable {
 		updateUI();	
 		
 		//Test lvPlan
-		ListJournal listJournal = ListJournal.getInstance();
 		listJournal.addJournal(new Journal("id1", "Test workd 1", new ArrayList<String>() {} , false,  " ", null)); 
 		listJournal.addJournal(new Journal("id2", "Test workd 2", new ArrayList<String>() {} , true, " ", null)); 
 		listJournal.addJournal(new Journal("id3", "Test workd 3", new ArrayList<String>() {} , true, " ", null)); 
@@ -787,9 +830,9 @@ public class ChatSceneController implements Initializable {
 			if (journal != null && !empty){
 				PlanItem item = new PlanItem();
 				//convert array list to just one string
-				String performers = null;
+				String performers = "";
 				for(int i=0; i<journal.getListPerformer().size(); i++){
-					performers += journal.getListPerformer().get(i).toString() + " - ";
+					performers += journal.getListPerformer().get(i).toString() + " ";
 				}
 				
 				if (journal.getListPerformer().size() == 0)

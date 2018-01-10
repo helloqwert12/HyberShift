@@ -13,10 +13,11 @@ public class Journal {
 	private String endDay;
 	
 	public Journal(){
-		
+		listPerformer = new ArrayList<>();
 	}
 	
 	public Journal(String id, String work, ArrayList<String> listPerformer, boolean isDone, String startDay, String endDay){
+		listPerformer = new ArrayList<>();
 		this.id = id;
 		this.work = work;
 		this.listPerformer = listPerformer;
@@ -40,6 +41,7 @@ public class Journal {
 	public void setEndDay(String endDay) { this.endDay = endDay; }
 	
 	public void addPerformer(String name){
+		
 		//check
 		for(int i=0; i<listPerformer.size(); i++){
 			if (listPerformer.get(i).equals(name))
