@@ -41,6 +41,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import Tools.ImageUtils;
+import Tools.SlideManager;
 import application.Main;
 import board.DrawState;
 import board.PenDrawing;
@@ -64,7 +65,9 @@ import dataobject.UserInfo;
 import dataobject.UserOnline;
 
 
+
 public class ChatSceneController implements Initializable {
+
 	//JFX controls
 	@FXML JFXListView<Message> lvMessage;
 	@FXML JFXTextField taEdit;
@@ -92,12 +95,22 @@ public class ChatSceneController implements Initializable {
     @FXML private Button btnChooseImg;
     
     //Show notification
-    @FXML private Button btnShowNotification;
+    @FXML private JFXButton btnShowNotification;
     @FXML private AnchorPane pnlNotification;
     ListNotification listNotification = ListNotification.getInstance();
     
+    //Slide presentation
+    @FXML private ImageView imgSlide;
+    @FXML private JFXButton btnOpenSlide;
+    @FXML private JFXButton btnLeft;
+    @FXML private JFXButton btnRight;
+    @FXML private AnchorPane pnlSlide;
+    @FXML private JFXButton btnShowSlide;
+    ArrayList<Image> listSlide;
+    private int currSlide;
+    
     //Show room
-    @FXML private Button btnShowRoom;
+    @FXML private JFXButton btnShowRoom;
     @FXML private AnchorPane pnlRoom;
     
     //Board drawing
@@ -424,6 +437,30 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 			}
+		}).on("new_slide", new Listener() {		
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {	
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							if (!currRoom.getId().equals(object.getString("room_id")))
+								return;
+							
+							imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
+							
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+				});
+			}
 		}).on("create_task", new Listener() {
 			@Override
 			public void call(Object... args) {
@@ -485,6 +522,88 @@ public class ChatSceneController implements Initializable {
     }
 	
 	@FXML
+	void onActionBtnShowSlide(ActionEvent event) {
+		if (pnlSlide.isVisible()){
+			pnlSlide.setVisible(false);
+		}
+		else{
+			pnlSlide.toFront();
+			pnlSlide.setVisible(true);
+			pnlPlan.setVisible(false);
+			drawer.setVisible(false);
+		}
+		
+	}
+	
+	
+	@FXML
+    void onActionBtnOpenSlide(ActionEvent event) {
+		listSlide.clear();
+		imgSlide.setImage(null);
+		currSlide = 0;
+		
+		FileChooser fileChooser = new FileChooser();
+        
+        //Show open file dialog
+        File pptPath = fileChooser.showOpenDialog(null);
+    	Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
+					imgSlide.setImage(listSlide.get(currSlide));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+    }
+	
+	 @FXML
+	 void onActionBtnLeft(ActionEvent event) {
+		 if (listSlide.size() == 0) 
+			 return;
+		 if (currSlide == 0)
+			 return;
+		 currSlide--;
+		 //imgSlide.setImage(listSlide.get(currSlide));
+		 JSONObject object = new JSONObject();
+		 try {
+			object.put("room_id", currRoom.getId());
+			object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
+			
+			//emit
+			socket.emit("new_slide", object);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+	  
+	 @FXML
+	 void onActionBtnRight(ActionEvent event) {
+		 if (listSlide.size() == 0) 
+			 return;
+		 if (currSlide >= listSlide.size())
+			 return;
+		 currSlide++;
+		 //imgSlide.setImage(listSlide.get(currSlide));
+		 JSONObject object = new JSONObject();
+		 try {
+			object.put("room_id", currRoom.getId());
+			object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
+			
+			//emit
+			socket.emit("new_slide", object);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+
+	
+	@FXML
 	public void onActionBtnSentClick(){
 		System.out.println("btnSent clicked");
 		sendMessage();
@@ -510,6 +629,7 @@ public class ChatSceneController implements Initializable {
 	
     @FXML
     void onActionBtnRealtimeBoardClick() {
+    	
     	if (drawer.isShown()){
     		Platform.runLater(new Runnable() {
 				@Override
@@ -525,7 +645,9 @@ public class ChatSceneController implements Initializable {
     		Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					drawer.setVisible(true);
 					pnlPlan.setVisible(false);
+					pnlSlide.setVisible(false);
 					drawer.open();
 				}
 			});
@@ -615,10 +737,15 @@ public class ChatSceneController implements Initializable {
     
     @FXML
     void onActionBtnPlanClick(ActionEvent event) {
-    	if (pnlPlan.isVisible())
+    	if (pnlPlan.isVisible()){
     		pnlPlan.setVisible(false);
-    	else
+    	}
+    	else{
     		pnlPlan.setVisible(true);
+    		pnlPlan.toFront();
+    		pnlSlide.setVisible(false);
+    		drawer.setVisible(false);
+    	}
     }
     
     @FXML
@@ -678,11 +805,12 @@ public class ChatSceneController implements Initializable {
 	}
 	
 	private void updateUI(){
-		pnlPlan.setVisible(false);
 		pnlNotification.setVisible(true);
 		pnlRoom.setVisible(false);
 		
 		lblRoomName.setText("Hybershift public chat");
+		
+		listSlide = new ArrayList<>();
 		
 		//lvMessage
 		lvMessage.setCellFactory(new Callback<ListView<Message>, ListCell<Message>>() {		
@@ -704,6 +832,8 @@ public class ChatSceneController implements Initializable {
 				e.printStackTrace();
 			}
 		}
+		
+	
 		
 		//update Username label when signing
 		lblUsername.setText(userInfo.getFullName());
@@ -756,6 +886,7 @@ public class ChatSceneController implements Initializable {
 		});
 		
 		
+	
 		//auto complete for tfPerfomrer
 		//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
 		

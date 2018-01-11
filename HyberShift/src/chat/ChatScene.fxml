@@ -48,7 +48,7 @@
             </AnchorPane>
             <AnchorPane fx:id="pnlNotification" layoutX="31.0" layoutY="95.0" prefHeight="641.0" prefWidth="291.0">
                <children>
-                  <JFXListView fx:id="lvNotification" layoutY="50.0" prefHeight="277.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
+                  <JFXListView fx:id="lvNotification" layoutY="50.0" prefHeight="589.0" prefWidth="291.0" style="-fx-background-color: #011640;" />
                   <Label layoutX="14.0" layoutY="14.0" text="Notification" textFill="#f5f5f5" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                      <font>
                         <Font name="System Italic" size="18.0" />
@@ -144,6 +144,15 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
+                  <JFXButton fx:id="btnShowSlide" contentDisplay="GRAPHIC_ONLY" layoutX="826.0" layoutY="5.0" onAction="#onActionBtnShowSlide" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="295.0" AnchorPane.topAnchor="5.0">
+                     <graphic>
+                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/slideshow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="11.0" layoutY="584.0" prefHeight="92.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0">
@@ -194,9 +203,41 @@
                   </AnchorPane>
                </children>
             </JFXDrawer>
-            <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="754.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="439.0" AnchorPane.topAnchor="82.0">
+            <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="471.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="722.0" AnchorPane.topAnchor="82.0">
                <children>
-                  <JFXListView fx:id="lvMessage" layoutX="-1.0" prefHeight="606.0" prefWidth="400.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="354.0" AnchorPane.topAnchor="0.0" />
+                  <JFXListView fx:id="lvMessage" layoutX="-1.0" prefHeight="606.0" prefWidth="495.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="pnlSlide" layoutX="489.0" layoutY="82.0" prefHeight="605.0" prefWidth="703.0" visible="false">
+               <children>
+                  <JFXButton fx:id="btnRight" contentDisplay="GRAPHIC_ONLY" layoutX="401.0" layoutY="478.0" onAction="#onActionBtnRight" prefHeight="62.0" prefWidth="65.0" AnchorPane.topAnchor="478.0">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/right_arrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <ImageView fx:id="imgSlide" fitHeight="473.0" fitWidth="688.0" layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" />
+                  <JFXButton fx:id="btnOpenSlide1" contentDisplay="GRAPHIC_ONLY" layoutX="624.0" layoutY="529.0" onAction="#onActionBtnOpenSlide" prefHeight="62.0" prefWidth="65.0">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/open_slide.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="btnLeft" contentDisplay="GRAPHIC_ONLY" layoutX="251.0" layoutY="478.0" onAction="#onActionBtnLeft" prefHeight="62.0" prefWidth="65.0" AnchorPane.topAnchor="478.0">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/left_arrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
                </children>
             </AnchorPane>
          </children>

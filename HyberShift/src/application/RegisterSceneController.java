@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import Tools.ImageUtils;
+import Tools.SlideManager;
 import chatsocket.ChatSocket;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
@@ -106,7 +107,7 @@ public class RegisterSceneController{
 		//Notificaton
 		ListNotification listNotification = ListNotification.getInstance();
 	    
-	    public RegisterSceneController() {
+	    public RegisterSceneController() {  	    	
 	    	socket = ChatSocket.getInstance().getSocket();
 	    	socket.on(Socket.EVENT_CONNECT, new Listener() {
 				

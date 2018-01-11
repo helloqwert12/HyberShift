@@ -1,11 +1,14 @@
 package Tools;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
@@ -36,5 +39,20 @@ public class ImageUtils {
 		byte[] imgBytes = Base64.getDecoder().decode(base64String);
 		BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imgBytes));
 		return SwingFXUtils.toFXImage(bufImg, null);
+	}
+	
+	public static String imgToBase64String(final RenderedImage img)
+	{
+	  final ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+	  try
+	  {
+	    ImageIO.write(img, "png", os);
+	    return Base64.getEncoder().encodeToString(os.toByteArray());
+	  }
+	  catch (final IOException ioe)
+	  {
+	    throw new UncheckedIOException(ioe);
+	  }
 	}
 }
