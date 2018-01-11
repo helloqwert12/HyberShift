@@ -20,8 +20,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import dataobject.ListNotification;
 import dataobject.ListOnline;
 import dataobject.ListRoom;
+import dataobject.Notification;
 import dataobject.Room;
 import dataobject.UserInfo;
 import dataobject.UserOnline;
@@ -100,6 +102,9 @@ public class RegisterSceneController{
 		
 		//Login
 		Main main;
+		
+		//Notificaton
+		ListNotification listNotification = ListNotification.getInstance();
 	    
 	    public RegisterSceneController() {
 	    	socket = ChatSocket.getInstance().getSocket();
@@ -185,6 +190,29 @@ public class RegisterSceneController{
 						}	
 					}
 				});	
+				}
+			}).on("notification", new Listener() {		
+				@Override
+				public void call(Object... args) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							System.out.println("New notification!");
+							JSONObject object = (JSONObject)args[0];
+							Notification notification = new Notification();
+							try {
+								notification.setSender(object.getString("sender"));
+								notification.setContent(object.getString("content"));
+								notification.setTimestamp(object.getInt("timestamp"));
+								notification.setType(object.getString("type"));
+								notification.setImgString(object.getString("imgstring"));
+								listNotification.addNotification(notification);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});	
 				}
 			}).on("room_created", new Listener() {	
 				@Override

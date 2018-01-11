@@ -53,9 +53,11 @@ import com.jfoenix.controls.*;
 import dataobject.Journal;
 import dataobject.ListJournal;
 import dataobject.ListMessage;
+import dataobject.ListNotification;
 import dataobject.ListOnline;
 import dataobject.ListRoom;
 import dataobject.Message;
+import dataobject.Notification;
 import dataobject.Room;
 import dataobject.SenderTyping;
 import dataobject.UserInfo;
@@ -92,6 +94,7 @@ public class ChatSceneController implements Initializable {
     //Show notification
     @FXML private Button btnShowNotification;
     @FXML private AnchorPane pnlNotification;
+    ListNotification listNotification = ListNotification.getInstance();
     
     //Show room
     @FXML private Button btnShowRoom;
@@ -120,6 +123,9 @@ public class ChatSceneController implements Initializable {
 	
 	//list journal
 	ListJournal listJournal = ListJournal.getInstance();
+	
+	//notification
+	@FXML private JFXListView<Notification> lvNotification;
 	
 	//typing event
 	boolean isSetTyping = false;
@@ -292,6 +298,30 @@ public class ChatSceneController implements Initializable {
 					}
 				});
 			}
+		}).on("notification", new Listener() {		
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						System.out.println("New notification!");
+						JSONObject object = (JSONObject)args[0];
+						Notification notification = new Notification();
+						try {
+							notification.setSender(object.getString("sender"));
+							notification.setContent(object.getString("content"));
+							notification.setTimestamp(object.getInt("timestamp"));
+							notification.setType(object.getString("type"));
+							notification.setImgString(object.getString("imgstring"));
+							listNotification.addNotification(notification);
+							lvNotification.setItems(listNotification.getOList());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});	
+			}
 		}).on("room_created", new Listener() {
 			@Override
 			public void call(Object... args) {
@@ -443,11 +473,15 @@ public class ChatSceneController implements Initializable {
 	@FXML
     void onActionBtnShowNotification(ActionEvent event) {
 		pnlNotification.toFront();
+		pnlNotification.setVisible(true);
+		pnlRoom.setVisible(false);
     }
 	
 	@FXML
     void onActionBtnShowRoom(ActionEvent event) {
 		pnlRoom.toFront();
+		pnlRoom.setVisible(true);
+		pnlNotification.setVisible(false);
     }
 	
 	@FXML
@@ -645,10 +679,12 @@ public class ChatSceneController implements Initializable {
 	
 	private void updateUI(){
 		pnlPlan.setVisible(false);
+		pnlNotification.setVisible(true);
+		pnlRoom.setVisible(false);
 		
 		lblRoomName.setText("Hybershift public chat");
 		
-		//test
+		//lvMessage
 		lvMessage.setCellFactory(new Callback<ListView<Message>, ListCell<Message>>() {		
 			@Override
 			public ListCell<Message> call(ListView<Message> param) {
@@ -722,6 +758,17 @@ public class ChatSceneController implements Initializable {
 		
 		//auto complete for tfPerfomrer
 		//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
+		
+		//lvNotification
+		lvNotification.setCellFactory(new Callback<ListView<Notification>, ListCell<Notification>>() {
+			@Override
+			public ListCell<Notification> call(ListView<Notification> param) {
+				return new NotificationCell();
+			}
+		});
+		
+		lvNotification.setItems(listNotification.getOList());
+		
 	}
 
 	@Override
@@ -912,4 +959,22 @@ public class ChatSceneController implements Initializable {
 		}
 	}
 	
+	public static class NotificationCell extends ListCell<Notification>{
+		@Override
+		public void updateItem(Notification notification, boolean empty){
+			super.updateItem(notification, empty);
+			setText(null);
+			setGraphic(null);
+			if (notification != null && !empty){
+				NotificationItem item = new NotificationItem();
+				try {
+					item.setInfo(notification.getSender(), notification.getContent(), notification.getType(), notification.getImgString(), notification.getTimestamp());
+					setGraphic(item.getVBox());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }
