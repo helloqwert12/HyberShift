@@ -36,7 +36,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -117,6 +119,8 @@ public class ChatSceneController implements Initializable {
     GraphicsContext gc;
     PenDrawing penDrawing;
     DrawState drawState;
+    @FXML private JFXColorPicker colorPicker;
+    @FXML private JFXSlider slider;
 	
     //Socket
 	ChatSocket chatsocket;
@@ -212,6 +216,10 @@ public class ChatSceneController implements Initializable {
 								ArrayList<Point> listPoints = convertJsArrToLstPnt(jsonarr);
 								penDrawing.setListPoints(listPoints);
 								penDrawing.draw(gc);		
+								//gc.setStroke((Color)object.get("color"));
+								gc.setLineWidth(object.getDouble("width"));
+								slider.setValue(object.getDouble("width"));
+								System.out.println("width: " + object.getDouble("width"));
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
@@ -659,11 +667,15 @@ public class ChatSceneController implements Initializable {
     	if (drawer.isHidden()) return;
     	
     	penDrawing.addPoint(new Point((int)event.getX(), (int)event.getY()));
+    	gc.setStroke(colorPicker.getValue());
+    	gc.setLineWidth(slider.getValue());
     	penDrawing.draw(gc);
     	drawState = DrawState.ON_DRAW;
     	JSONObject object = new JSONObject();
     	try {
 			object.put("room_id", currRoom.getId());
+			object.put("color", (Color)colorPicker.getValue());
+			object.put("width", slider.getValue());
 			//emit to server
 	    	JSONArray jsonArrPoints = convertLstPntToJsArr(penDrawing.getListPoints());
 	    	object.put("points", jsonArrPoints);
@@ -674,6 +686,17 @@ public class ChatSceneController implements Initializable {
 		}
     	
     	
+    }
+    
+    @FXML
+    void onActionColorPicker(ActionEvent event) {
+    	gc.setStroke(colorPicker.getValue());
+    	System.out.println(colorPicker.getValue());
+    }
+    
+    @FXML
+    void onDragSlider(MouseEvent event) {
+    	gc.setLineWidth(slider.getValue());
     }
     
     @FXML
@@ -805,6 +828,10 @@ public class ChatSceneController implements Initializable {
 	}
 	
 	private void updateUI(){
+		//pen drawing
+		//gc.setLineWidth(slider.getValue());
+		//gc.setStroke(colorPicker.getValue());
+		
 		pnlNotification.setVisible(true);
 		pnlRoom.setVisible(false);
 		
@@ -881,14 +908,16 @@ public class ChatSceneController implements Initializable {
 				
 				//clear list journal
 				listJournal.getList().clear();
+				
+				//auto complete for tfPerfomrer
+				//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
 			}
 
 		});
 		
 		
 	
-		//auto complete for tfPerfomrer
-		//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
+		
 		
 		//lvNotification
 		lvNotification.setCellFactory(new Callback<ListView<Notification>, ListCell<Notification>>() {
@@ -908,13 +937,13 @@ public class ChatSceneController implements Initializable {
 		updateUI();	
 		
 		//Test lvPlan
-		listJournal.addJournal(new Journal("id1", "Test workd 1", new ArrayList<String>() {} , false,  " ", null)); 
-		listJournal.addJournal(new Journal("id2", "Test workd 2", new ArrayList<String>() {} , true, " ", null)); 
-		listJournal.addJournal(new Journal("id3", "Test workd 3", new ArrayList<String>() {} , true, " ", null)); 
-		
-		ObservableList<Journal> testList = FXCollections.observableArrayList(listJournal.getOListJournal());
-		
-		lvPlan.setItems(testList);
+//		listJournal.addJournal(new Journal("id1", "Test workd 1", new ArrayList<String>() {} , false,  " ", null)); 
+//		listJournal.addJournal(new Journal("id2", "Test workd 2", new ArrayList<String>() {} , true, " ", null)); 
+//		listJournal.addJournal(new Journal("id3", "Test workd 3", new ArrayList<String>() {} , true, " ", null)); 
+//		
+//		ObservableList<Journal> testList = FXCollections.observableArrayList(listJournal.getOListJournal());
+//		
+//		lvPlan.setItems(testList);
 		
 		lvPlan.setCellFactory(new Callback<ListView<Journal>, ListCell<Journal>>() {
 			

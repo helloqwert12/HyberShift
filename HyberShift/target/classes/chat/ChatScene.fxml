@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXColorPicker?>
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
@@ -157,7 +159,7 @@
             </AnchorPane>
             <AnchorPane layoutX="11.0" layoutY="584.0" prefHeight="92.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <JFXButton fx:id="btnSent" contentDisplay="GRAPHIC_ONLY" layoutX="588.0" layoutY="14.0" onAction="#onActionBtnSentClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="13.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                  <JFXButton fx:id="btnSent" contentDisplay="GRAPHIC_ONLY" layoutX="715.0" layoutY="14.0" onAction="#onActionBtnSentClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="715.0" AnchorPane.topAnchor="14.0">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -167,11 +169,13 @@
                      </graphic>
                   </JFXButton>
                   <JFXTextField fx:id="taEdit" layoutX="32.0" layoutY="31.0" onKeyPressed="#onKeyPressedBtnSentClick" onKeyTyped="#onKeyTypedTaEdit" prefHeight="31.0" prefWidth="659.0" promptText="Insert message . . ." style="-fx-background-color: white;" />
+                  <JFXColorPicker fx:id="colorPicker" layoutX="860.0" layoutY="26.0" onAction="#onActionColorPicker" prefHeight="42.0" prefWidth="140.0" promptText="Select color" AnchorPane.bottomAnchor="24.0" AnchorPane.rightAnchor="193.0" AnchorPane.topAnchor="26.0" />
+                  <JFXSlider fx:id="slider" blockIncrement="1.0" layoutX="1025.0" layoutY="38.0" max="15.0" min="1.0" onDragDetected="#onDragSlider" value="3.0" AnchorPane.bottomAnchor="36.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="38.0" />
                </children>
             </AnchorPane>
-            <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="719.0" layoutY="82.0" prefHeight="606.0" prefWidth="403.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="719.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
+            <JFXDrawer fx:id="drawer" defaultDrawerSize="400.0" direction="RIGHT" layoutX="570.0" layoutY="82.0" prefHeight="606.0" prefWidth="608.0" style="-fx-background-color: #020A17;" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="719.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0">
                <children>
-                  <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMousePressed="#onMousePressedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="400.0" />
+                  <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMousePressed="#onMousePressedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="470.0" />
                   <AnchorPane fx:id="pnlPlan" prefHeight="606.0" prefWidth="342.0">
                      <children>
                         <JFXListView fx:id="lvPlan" layoutX="84.0" layoutY="133.0" prefHeight="473.0" prefWidth="316.0" style="-fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="133.0" />
@@ -198,7 +202,8 @@
                                     <Image url="@icon/perfromer.png" />
                                  </image>
                               </ImageView>
-                           </children></AnchorPane>
+                           </children>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
                </children>
