@@ -4,9 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -108,8 +110,13 @@ public class ChatSceneController implements Initializable {
     @FXML private JFXButton btnRight;
     @FXML private AnchorPane pnlSlide;
     @FXML private JFXButton btnShowSlide;
+    @FXML private JFXButton btnSaveImg;
+    @FXML private JFXButton btnOpenFile;
     ArrayList<Image> listSlide;
     private int currSlide;
+    private String fileString;
+    
+    @FXML private Hyperlink hlRecievedFile;
     
     //Show room
     @FXML private JFXButton btnShowRoom;
@@ -215,11 +222,16 @@ public class ChatSceneController implements Initializable {
 								JSONArray jsonarr = object.getJSONArray("points");
 								ArrayList<Point> listPoints = convertJsArrToLstPnt(jsonarr);
 								penDrawing.setListPoints(listPoints);
+								gc.setLineWidth(object.getDouble("width"));
+								
+								Color color = Color.rgb(object.getInt("r"), object.getInt("g"), object.getInt("b"));
+								
+								System.out.println("r g b : " + object.getInt("r") + " " + object.getInt("g") + " " + object.getInt("b"));
+								gc.setStroke(color);
+								
 								penDrawing.draw(gc);		
 								//gc.setStroke((Color)object.get("color"));
-								gc.setLineWidth(object.getDouble("width"));
-								slider.setValue(object.getDouble("width"));
-								System.out.println("width: " + object.getDouble("width"));
+								
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
@@ -437,9 +449,36 @@ public class ChatSceneController implements Initializable {
 					@Override
 					public void run() {		
 						try {
-							imgview.setImage(ImageUtils.decodeBase64BinaryToImage((String)args[0]));
+							JSONObject object = (JSONObject)args[0];
+							try {
+								if (!currRoom.getId().equals(object.getString("room_id")))
+									return;
+								btnSaveImg.setDisable(false);
+								imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+							
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		}).on("new_file", new Listener() {
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {		
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							if (!currRoom.getId().equals(object.getString("room_id")))
+								return;
+							fileString = object.getString("imgstring");
+							hlRecievedFile.setVisible(true);
+						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 					}
@@ -456,6 +495,7 @@ public class ChatSceneController implements Initializable {
 							if (!currRoom.getId().equals(object.getString("room_id")))
 								return;
 							
+							btnSaveImg.setDisable(false);
 							imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
 							
 						} catch (JSONException e) {
@@ -568,6 +608,62 @@ public class ChatSceneController implements Initializable {
 		});
     }
 	
+	@FXML
+	void onActionBtnOpenFile(ActionEvent event){
+		FileChooser fileChooser = new FileChooser();
+        
+        //Show open file dialog
+        File file = fileChooser.showOpenDialog(null);
+        String encodstring = ImageUtils.encodeFileToBase64Binary(file);
+		   
+		//emit to server
+		JSONObject object = new JSONObject();
+		try {
+			object.put("room_id", currRoom.getId());
+			object.put("imgstring", encodstring);
+			
+		    socket.emit("new_file", object);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML 
+	void onActionBtnSaveImg(ActionEvent event){
+		FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Image");
+         
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(imgSlide.getImage(),null), "png", file);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        btnSaveImg.setDisable(true);
+	}
+	
+	@FXML
+    void onActionHlRecievedFile(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save File");
+         
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            try {
+            	byte[] decodedBytes = Base64.getDecoder().decode(fileString.getBytes());
+            	Files.write(file.toPath(), decodedBytes);
+            	
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        hlRecievedFile.setVisible(false);
+    }
+	
 	 @FXML
 	 void onActionBtnLeft(ActionEvent event) {
 		 if (listSlide.size() == 0) 
@@ -637,29 +733,41 @@ public class ChatSceneController implements Initializable {
 	
     @FXML
     void onActionBtnRealtimeBoardClick() {
-    	
     	if (drawer.isShown()){
-    		Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					drawer.close();
-					//clear gc
-					gc.clearRect(canvas.getLayoutX(), canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
-					penDrawing.clear();
-				}
-			});
+    		drawer.close();
+			//clear gc
+			gc.clearRect(canvas.getLayoutX(), canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
+			penDrawing.clear();
     	}
     	else{
-    		Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					drawer.setVisible(true);
-					pnlPlan.setVisible(false);
-					pnlSlide.setVisible(false);
-					drawer.open();
-				}
-			});
+    		drawer.setVisible(true);
+			pnlPlan.setVisible(false);
+			pnlSlide.setVisible(false);
+			drawer.open();
     	}
+    	
+//    	if (drawer.isShown()){
+//    		Platform.runLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					drawer.close();
+//					//clear gc
+//					gc.clearRect(canvas.getLayoutX(), canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
+//					penDrawing.clear();
+//				}
+//			});
+//    	}
+//    	else{
+//    		Platform.runLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					drawer.setVisible(true);
+//					pnlPlan.setVisible(false);
+//					pnlSlide.setVisible(false);
+//					drawer.open();
+//				}
+//			});
+//    	}
     }
     
     @FXML
@@ -669,13 +777,17 @@ public class ChatSceneController implements Initializable {
     	penDrawing.addPoint(new Point((int)event.getX(), (int)event.getY()));
     	gc.setStroke(colorPicker.getValue());
     	gc.setLineWidth(slider.getValue());
+    	
     	penDrawing.draw(gc);
     	drawState = DrawState.ON_DRAW;
     	JSONObject object = new JSONObject();
     	try {
 			object.put("room_id", currRoom.getId());
-			object.put("color", (Color)colorPicker.getValue());
+			object.put("r", colorPicker.getValue().getRed() * 255);
+			object.put("g", colorPicker.getValue().getGreen() * 255);
+			object.put("b", colorPicker.getValue().getBlue() * 255);
 			object.put("width", slider.getValue());
+			System.out.println("sender r g b: " + colorPicker.getValue().getRed() + " " + colorPicker.getValue().getGreen() + " " + colorPicker.getValue().getBlue());
 			//emit to server
 	    	JSONArray jsonArrPoints = convertLstPntToJsArr(penDrawing.getListPoints());
 	    	object.put("points", jsonArrPoints);
@@ -1045,10 +1157,7 @@ public class ChatSceneController implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				String encodstring = ImageUtils.encodeFileToBase64Binary(imgPath);
-		       
-				//emit to server
-		        socket.emit("new_image", encodstring);
+				
 			}
 		});
 		
@@ -1056,6 +1165,7 @@ public class ChatSceneController implements Initializable {
 	
 	@FXML
 	public void onBtnChooseImgAction(){	
+		
 		FileChooser fileChooser = new FileChooser();
         
         //Set extension filter
@@ -1069,7 +1179,19 @@ public class ChatSceneController implements Initializable {
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            imgview.setImage(image);
+            //imgSlide.setImage(image);
+            String encodstring = ImageUtils.encodeFileToBase64Binary(imgPath);
+		       
+			//emit to server
+            JSONObject object = new JSONObject();
+            try {
+				object.put("room_id", currRoom.getId());
+				object.put("imgstring", encodstring);
+				
+		        socket.emit("new_image", object);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}   
         } catch (IOException ex) {
         	ex.printStackTrace();
         }
