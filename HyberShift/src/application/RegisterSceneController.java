@@ -4,10 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -225,8 +227,12 @@ public class RegisterSceneController{
 							try {
 								String roomId = object.getString("room_id");
 								String roomName = object.getString("room_name");
-								System.out.println("roomName: " + roomName);
-								listRoom.addRoom(new Room(roomId, roomName, null));
+								JSONArray listjson = object.getJSONArray("members");
+								ArrayList<String> members = new ArrayList<>();
+								for(int i=0; i<listjson.length(); i++){
+									members.add(listjson.getString(i));
+								}		
+								listRoom.addRoom(new Room(roomId, roomName, members));
 								System.out.println("Register form: " + listRoom.getListRoomName());
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block

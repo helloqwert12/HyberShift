@@ -28,12 +28,12 @@
                </font>
             </Label>
             <Line endX="100.0" layoutX="168.0" layoutY="80.0" startX="-100.0" stroke="#e8dbdb" />
-            <Circle fx:id="cimgAvatar" fill="DODGERBLUE" layoutX="74.0" layoutY="42.0" radius="32.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="cimgAvatar" fill="#1f93ff" layoutX="74.0" layoutY="42.0" radius="32.0" stroke="BLACK" strokeType="INSIDE" />
             <ImageView fx:id="imgview" fitHeight="160.0" fitWidth="216.0" layoutX="65.0" layoutY="512.0" pickOnBounds="true" preserveRatio="true" />
-            <AnchorPane fx:id="pnlRoom" layoutX="40.0" layoutY="96.0" prefHeight="688.0" prefWidth="322.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="76.0">
+            <AnchorPane fx:id="pnlRoom" layoutX="40.0" layoutY="96.0" prefHeight="688.0" prefWidth="322.0" style="-fx-background-color: #011640;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="76.0">
                <children>
-                  <JFXListView fx:id="lvRoom" layoutY="60.0" prefHeight="277.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
-                  <JFXListView fx:id="lvOnline" layoutY="450.0" prefHeight="190.0" prefWidth="270.0" style="-fx-background-color: #011640;" />
+                  <JFXListView fx:id="lvRoom" layoutY="60.0" prefHeight="277.0" prefWidth="322.0" style="-fx-background-color: #011640;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <JFXListView fx:id="lvOnline" layoutY="450.0" prefHeight="190.0" prefWidth="322.0" style="-fx-background-color: #011640;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label layoutX="14.0" layoutY="14.0" text="Room chat" textFill="#f5f5f5" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                      <font>
                         <Font name="System Italic" size="18.0" />
@@ -48,7 +48,7 @@
                   <Line endX="100.0" layoutX="116.0" layoutY="420.0" startX="-100.0" stroke="#ebe1e1" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="pnlNotification" layoutX="31.0" layoutY="95.0" prefHeight="641.0" prefWidth="291.0">
+            <AnchorPane fx:id="pnlNotification" layoutX="31.0" layoutY="95.0" prefHeight="641.0" prefWidth="291.0" style="-fx-background-color: #011640;">
                <children>
                   <JFXListView fx:id="lvNotification" layoutY="50.0" prefHeight="589.0" prefWidth="291.0" style="-fx-background-color: #011640;" />
                   <Label layoutX="14.0" layoutY="14.0" text="Notification" textFill="#f5f5f5" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
@@ -69,31 +69,24 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <JFXButton fx:id="btnShowRoom" contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="153.0" onAction="#onActionBtnShowRoom" prefHeight="65.0" prefWidth="65.0">
+            <JFXButton fx:id="btnShowRoom" contentDisplay="GRAPHIC_ONLY" layoutX="19.0" layoutY="179.0" onAction="#onActionBtnShowRoom" prefHeight="65.0" prefWidth="65.0">
                <graphic>
-                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icon/room.png" />
-                     </image>
-                  </ImageView>
+                  <FontAwesomeIconView fill="WHITE" glyphName="COMMENTS" size="30" />
                </graphic>
             </JFXButton>
-            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="219.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0">
+            <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="19.0" layoutY="245.0" onAction="#onActionBtnCreateRoomClick" prefHeight="65.0" prefWidth="65.0">
                <graphic>
-                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icon/create_group.png" />
-                     </image>
-                  </ImageView>
+                  <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="30" />
                </graphic></JFXButton>
-            <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="35.0" layoutY="66.0" size="48" />
-            <JFXButton fx:id="btnShowNotification" contentDisplay="GRAPHIC_ONLY" layoutX="18.0" layoutY="85.0" onAction="#onActionBtnShowNotification" prefHeight="65.0" prefWidth="65.0">
+            <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="28.0" layoutY="65.0" size="60" />
+            <JFXButton fx:id="btnShowNotification" contentDisplay="GRAPHIC_ONLY" layoutX="19.0" layoutY="111.0" onAction="#onActionBtnShowNotification" prefHeight="65.0" prefWidth="65.0">
                <graphic>
-                  <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icon/notification.png" />
-                     </image>
-                  </ImageView>
+                  <FontAwesomeIconView fill="#eeeeee" glyphName="BELL" size="30" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="btnAddFriend" contentDisplay="GRAPHIC_ONLY" layoutX="19.0" layoutY="310.0" onAction="#onActionBtnAddFriend" prefHeight="65.0" prefWidth="65.0">
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="USER_PLUS" size="30" />
                </graphic>
             </JFXButton>
          </children>
@@ -105,20 +98,12 @@
                <children>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="692.0" layoutY="5.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="151.0" AnchorPane.topAnchor="5.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/video_call.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="WHITE" glyphName="VIDEO_CAMERA" size="40" />
                      </graphic>
                   </JFXButton>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="620.0" layoutY="5.0" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="223.0" AnchorPane.topAnchor="5.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/audio.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="WHITE" glyphName="BULLHORN" size="40" />
                      </graphic>
                   </JFXButton>
                   <Label fx:id="lblRoomName" layoutX="55.0" layoutY="21.0" prefHeight="35.0" prefWidth="291.0" text="Hybershift public chat&#10;" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="21.0">
@@ -128,29 +113,17 @@
                   </Label>
                   <JFXButton fx:id="btnRealtimeBoard" contentDisplay="GRAPHIC_ONLY" layoutX="764.0" layoutY="6.0" onAction="#onActionBtnRealtimeBoardClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="6.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/realtime_board.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="WHITE" glyphName="PENCIL_SQUARE_ALT" size="40" />
                      </graphic>
                   </JFXButton>
                   <JFXButton fx:id="btnPlan" contentDisplay="GRAPHIC_ONLY" layoutX="829.0" layoutY="5.0" onAction="#onActionBtnPlanClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="5.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/plan.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="WHITE" glyphName="LIST_ALT" size="40" />
                      </graphic>
                   </JFXButton>
                   <JFXButton fx:id="btnShowSlide" contentDisplay="GRAPHIC_ONLY" layoutX="826.0" layoutY="5.0" onAction="#onActionBtnShowSlide" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="295.0" AnchorPane.topAnchor="5.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/slideshow.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="40" />
                      </graphic>
                   </JFXButton>
                </children>
@@ -266,9 +239,9 @@
                   <Canvas fx:id="canvas" height="605.0" onMouseDragged="#onMouseDraggedCanvas" onMousePressed="#onMousePressedCanvas" onMouseReleased="#onMouseReleasedCanvas" width="503.0" />
                </children>
             </JFXDrawer>
-            <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="471.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="722.0" AnchorPane.topAnchor="82.0">
+            <AnchorPane layoutX="11.0" layoutY="82.0" prefHeight="606.0" prefWidth="511.0" AnchorPane.bottomAnchor="96.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="722.0" AnchorPane.topAnchor="82.0">
                <children>
-                  <JFXListView fx:id="lvMessage" layoutX="-1.0" prefHeight="606.0" prefWidth="495.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <JFXListView fx:id="lvMessage" layoutX="-1.0" prefHeight="606.0" prefWidth="511.0" style="-fx-background-color: #0A1528;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>

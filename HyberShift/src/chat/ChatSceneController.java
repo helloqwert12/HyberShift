@@ -71,7 +71,7 @@ import dataobject.UserOnline;
 
 
 public class ChatSceneController implements Initializable {
-
+	
 	//JFX controls
 	@FXML JFXListView<Message> lvMessage;
 	@FXML JFXTextField taEdit;
@@ -82,7 +82,7 @@ public class ChatSceneController implements Initializable {
     @FXML private JFXDrawer drawer;
     @FXML private Canvas canvas;
     @FXML private JFXDrawer drawerPlan;
-    @FXML private JFXListView<String> lvRoom;
+    @FXML private JFXListView<Room> lvRoom;
     @FXML private JFXListView<String> lvOnline;
     @FXML private JFXListView<Journal> lvPlan;
     @FXML private AnchorPane pnlPlan;
@@ -155,6 +155,9 @@ public class ChatSceneController implements Initializable {
 	boolean isSetTyping = false;
 	ArrayList<SenderTyping> listTyping;
 	
+	//friend
+	@FXML private JFXButton btnAddFriend;
+	
 	public ChatSceneController(){
 		
 		//lvMessage.setItems(itemList);
@@ -170,39 +173,44 @@ public class ChatSceneController implements Initializable {
 					@Override
 					public void run() {
 						JSONObject msgjson = (JSONObject) args[0];		
-						//Update listview message
-						Platform.runLater(new Runnable() {			
-							@Override
-							public void run() {
-								try {
-									String sender = msgjson.getString("sender");
-									String msg = sender + " : " + msgjson.getString("message");
-									String id = msgjson.getString("id");
-									String imgstring = msgjson.getString("imgstring");
-									Message message = new Message(id, msg, sender, imgstring, 0);
-									if (id.equals("public"))
-										System.out.println("public has new message");
-									else{
-										Room tempRoom = listRoom.getRoomById(id);
-										System.out.println(tempRoom.getName() + " has new message");
-										// if user is in current room, then display
-										if (currRoom.getId().equals(id)){
-											int indexToAdd = getMinIndexFrom(listTyping);
-											removeSenderFrom(listTyping, sender, lvMessage);
-											if (indexToAdd == 0)
-												lvMessage.getItems().add(message);
-											else
-												lvMessage.getItems().add(indexToAdd, message);
-										
-											increaseIndexFrom(listTyping, indexToAdd);
-										}
-									}
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+						try {
+							String sender = msgjson.getString("sender");
+							String msg = msgjson.getString("message");
+							String id = msgjson.getString("id");
+							String imgstring = msgjson.getString("imgstring");
+							Message message = new Message(id, msg, sender, imgstring, 0);
+							if (id.equals("public"))
+								System.out.println("public has new message");
+							else{
+								Room tempRoom = listRoom.getRoomById(id);
+								System.out.println(tempRoom.getName() + " has new message");
+								// if user is in current room, then display
+								if (currRoom.getId().equals(id)){
+									int indexToAdd = getMinIndexFrom(listTyping);
+									removeSenderFrom(listTyping, sender, lvMessage);
+									if (indexToAdd == 0)
+										lvMessage.getItems().add(message);
+									else
+										lvMessage.getItems().add(indexToAdd, message);
+								
+									increaseIndexFrom(listTyping, indexToAdd);
+								}
+								else{
+									System.out.println("Has new message!!!!!!!");
+									Room updateRoom = listRoom.getRoomById(id);
+									int index = listRoom.getIndexOfRoom(id);
+									updateRoom.setNewMessage(true);
+									
+									lvRoom.getItems().set(index, updateRoom);
+//									System.out.println("New message at room " + id);
+//									listRoom.setNewMessageAtRoom(id, true);
+//									lvRoom.setItems(listRoom.getOList());
 								}
 							}
-						});	
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				});			
 			}
@@ -362,12 +370,17 @@ public class ChatSceneController implements Initializable {
 					@Override
 					public void run() {
 						JSONObject object = (JSONObject)args[0];
+						
 						try {
 							String roomId = object.getString("room_id");
 							String roomName = object.getString("room_name");
-							System.out.println("roomName: " + roomName);
-							listRoom.addRoom(new Room(roomId, roomName, null));
-							ObservableList<String> oroomName = listRoom.getOListRoomName();
+							JSONArray listjson = object.getJSONArray("members");
+							ArrayList<String> members = new ArrayList<>();
+							for(int i=0; i<listjson.length(); i++){
+								members.add(listjson.getString(i));
+							}		
+							listRoom.addRoom(new Room(roomId, roomName, members));
+							ObservableList<Room> oroomName = listRoom.getOList();
 							System.out.println(oroomName);
 							lvRoom.setItems(oroomName);
 						} catch (JSONException e) {
@@ -384,7 +397,7 @@ public class ChatSceneController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						lvMessage.getItems().clear();
+						//lvMessage.getItems().clear();
 						JSONObject object = (JSONObject)args[0];
 						try {
 							String id = object.getString("id");
@@ -909,6 +922,11 @@ public class ChatSceneController implements Initializable {
 			e.printStackTrace();
 		}
     }
+    
+    @FXML
+    public void onActionBtnAddFriend(ActionEvent event){
+    	Main.showAddFriendDialog();
+    }
 
 	
 	private void sendMessage(){
@@ -985,22 +1003,33 @@ public class ChatSceneController implements Initializable {
 		lvOnline.setItems(olist);
 		
 		//update list room to lv
-		ObservableList<String> orlist = listRoom.getOListRoomName();
+		ObservableList<Room> orlist = listRoom.getOList();
 		System.out.println("list room name: " + listRoom.getListRoomName());
+		lvRoom.setCellFactory(new Callback<ListView<Room>, ListCell<Room>>() {		
+			@Override
+			public ListCell<Room> call(ListView<Room> param) {
+				return new RoomCell();
+			}
+		});
 		lvRoom.setItems(orlist);
 		
 		//item change event
-		lvRoom.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		lvRoom.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Room>() {
 
 			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				if (newValue.equals(oldValue))
+			public void changed(ObservableValue<? extends Room> observable,
+					Room oldValue, Room newValue) {
+				if (newValue == null)
 					return;
+				//if (newValue.equals(oldValue))
+				//	return;
 				
 				//get room by name
-				currRoom = listRoom.getRoomFromName(newValue);
+				currRoom = listRoom.getRoomById(newValue.getId());
 				System.out.println("Current room: " + currRoom.getName());
+				currRoom.setNewMessage(false);
+				lvRoom.getItems().set(listRoom.getIndexOfRoom(newValue.getId()), currRoom);
+				
 				//System.out.println("Room id: " + currRoom.getId());
 				
 				//emit to server to get message
@@ -1023,13 +1052,45 @@ public class ChatSceneController implements Initializable {
 				
 				//auto complete for tfPerfomrer
 				//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
+				
 			}
-
 		});
-		
-		
-	
-		
+//		lvRoom.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+//
+//			@Override
+//			public void changed(ObservableValue<? extends String> observable,
+//					String oldValue, String newValue) {
+//				if (newValue.equals(oldValue))
+//					return;
+//				
+//				//get room by name
+//				currRoom = listRoom.getRoomFromName(newValue);
+//				System.out.println("Current room: " + currRoom.getName());
+//				//System.out.println("Room id: " + currRoom.getId());
+//				
+//				//emit to server to get message
+//				socket.emit("room_change", currRoom.getId());
+//				
+//				//update UI room
+//				lblRoomName.setText(currRoom.getName());
+//				
+//				//clear lvMessage
+//				lvMessage.getItems().clear();
+//				
+//				//clear listMessage
+//				listMessage.getList().clear();
+//				
+//				//clear lvPlan
+//				lvPlan.getItems().clear();
+//				
+//				//clear list journal
+//				listJournal.getList().clear();
+//				
+//				//auto complete for tfPerfomrer
+//				//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
+//			}
+//
+//		});
 		
 		//lvNotification
 		lvNotification.setCellFactory(new Callback<ListView<Notification>, ListCell<Notification>>() {
@@ -1117,7 +1178,7 @@ public class ChatSceneController implements Initializable {
 			if (list.get(i).getSenderName().equals(sender)){
 				
 				//remove in listview first
-				lv.getItems().remove(list.get(i).getIndex());
+					lv.getItems().remove(list.get(i).getIndex());
 				
 				//then remove in listTyping
 				list.remove(i);
@@ -1231,7 +1292,8 @@ public class ChatSceneController implements Initializable {
 			if (message!=null && !empty){
 				MessageItem item = new MessageItem();
 				try {
-					item.setInfo(message.getImgString(), message.getMessage(), message.getTimestamp());
+//					item.setInfo(message.getImgString(), message.getMessage(), message.getTimestamp());
+					item.setInfo(message);
 					setGraphic(item.getVBox());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1256,6 +1318,20 @@ public class ChatSceneController implements Initializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+		}
+	}
+	
+	public static class RoomCell extends ListCell<Room>{
+		@Override
+		public void updateItem(Room room, boolean empty){
+			super.updateItem(room, empty);
+			setText(null);
+			setGraphic(null);
+			if (room != null && !empty){
+				RoomItem item = new RoomItem();
+				item.setInfo(room);
+				setGraphic(item.getVBox());
 			}
 		}
 	}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vbox" onMouseDragged="#onMouseEnteredRoomItem" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #011640;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="lblRoomName" alignment="TOP_LEFT" prefHeight="51.0" prefWidth="228.0" text="Room name" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+            <MaterialDesignIconView fx:id="iconNewMessage" fill="RED" glyphName="ALERT_CIRCLE" size="30">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </MaterialDesignIconView>
+         </children>
+      </HBox>
+      <Label fx:id="lblMembers" prefHeight="28.0" prefWidth="290.0" text="There is no member" textFill="#a48c8c">
+         <font>
+            <Font name="System Italic" size="15.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>

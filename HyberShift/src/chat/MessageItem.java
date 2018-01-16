@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dataobject.Message;
 import Tools.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,8 @@ public class MessageItem {
     @FXML
     private Label lblTimestamp;
     
+    @FXML private Label lblSender;
+    
     public MessageItem(){
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/chat/MessageItem.fxml"));
         fxmlLoader.setController(this);
@@ -46,6 +49,21 @@ public class MessageItem {
     	
     	//Formmated timestamp
     	Date date = new Date(timestamp);
+    	DateFormat formatter = new SimpleDateFormat("EE h:mm a");
+    	String dateFormatted = formatter.format(date);
+    	
+    	lblTimestamp.setText(dateFormatted);
+    }
+    
+    public void setInfo(Message message) throws IOException{
+    	if (!message.getImgString().equals("null"))
+    		cimgPic.setFill(new ImagePattern(ImageUtils.decodeBase64BinaryToImage(message.getImgString())));
+    	
+    	lblSender.setText(message.getSender());
+    	lblMessage.setText(message.getMessage());
+    	
+    	//Formmated timestamp
+    	Date date = new Date(message.getTimestamp());
     	DateFormat formatter = new SimpleDateFormat("EE h:mm a");
     	String dateFormatted = formatter.format(date);
     	

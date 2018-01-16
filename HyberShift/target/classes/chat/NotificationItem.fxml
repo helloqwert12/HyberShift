@@ -7,16 +7,16 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="285.0" style="-fx-background-color: #011640;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0">	
+      <HBox prefHeight="59.0" prefWidth="291.0">	
          <children>
             <Circle fx:id="cimgPic" fill="#1f93ff" radius="18.0" stroke="BLACK" strokeType="INSIDE">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Circle>
-            <Label fx:id="lblType" prefHeight="36.0" prefWidth="103.0" text="Type of notification">
+            <Label fx:id="lblType" prefHeight="36.0" prefWidth="103.0" text="Type of notification" textFill="WHITE">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
@@ -24,16 +24,16 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="lblTimestamp" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="37.0" prefWidth="102.0" text="timestamp">
+            <Label fx:id="lblTimestamp" alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="92.0" text="timestamp" textFill="#d3c5c5">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Label>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox prefHeight="91.0" prefWidth="291.0">
          <children>
-            <Label fx:id="lblContent" prefHeight="37.0" prefWidth="255.0" text="Content of notification">
+            <Label fx:id="lblContent" alignment="TOP_LEFT" prefHeight="75.0" prefWidth="281.0" text="Content of notification" textFill="WHITE" wrapText="true">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>

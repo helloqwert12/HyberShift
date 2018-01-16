@@ -61,6 +61,15 @@ public class ListRoom {
 		return null;
 	}
 	
+	public int getIndexOfRoom(String id){
+		for(int i=0; i<list.size(); i++){
+			Room tempRoom = list.get(i);
+			if (tempRoom.getId().equals(id))
+				return i;
+		}
+		return -1;
+	}
+	
 	public ArrayList<String> getMembersFrom(int indexRoom){
 		if (indexRoom >= list.size())
 			return new ArrayList<>();
@@ -82,5 +91,16 @@ public class ListRoom {
 		return olist;
 	}
 	
+	public ObservableList<Room> getOList(){
+		return FXCollections.observableArrayList(this.list);
+	}
+	
+	public void setNewMessageAtRoom(String roomId, boolean value){
+		for(int i=0; i<list.size(); i++){
+			if (list.get(i).getId().equals(roomId)){
+				list.get(i).setNewMessage(value);
+			}
+		}
+	}
 
 }

@@ -133,6 +133,21 @@ public class Main extends Application {
 		    }
 	}
 	
+	public static void showAddFriendDialog(){
+		try {
+		    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/friend/AddFriend.fxml"));
+		    Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));  
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.show();	
+            stg = stage;
+		            
+		    } catch(Exception e) {
+		       e.printStackTrace();
+		    }
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}

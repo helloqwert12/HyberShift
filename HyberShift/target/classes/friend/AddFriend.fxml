@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" style="-fx-background-color: #011640;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="friend.AddFriendController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="110.0" prefWidth="600.0" style="-fx-background-color: #010A26; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0) 10px;">
+               <children>
+                  <FontAwesomeIconView fill="WHITE" glyphName="XING" layoutX="273.0" layoutY="79.0" size="70" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="353.0" prefWidth="600.0">
+               <children>
+                  <JFXTextField fx:id="tfFind" focusColor="WHITE" layoutX="136.0" layoutY="46.0" onKeyTyped="#onKeyTypedTfFind" prefHeight="38.0" prefWidth="333.0" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="131.0" AnchorPane.topAnchor="46.0" />
+                  <JFXListView fx:id="lvResult" layoutX="75.0" layoutY="111.0" prefHeight="213.0" prefWidth="460.0" style="-fx-background-color: #011640;" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="111.0" />
+                  <JFXButton fx:id="button" contentDisplay="TEXT_ONLY" layoutX="31.0" layoutY="21.0" text="Test" textFill="WHITE">
+                     <graphic>
+                        <JFXBadge />
+                     </graphic>
+                  </JFXButton>
+                  <JFXBadge layoutX="145.0" layoutY="119.0" prefHeight="57.0" prefWidth="64.0" text="Hello" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
