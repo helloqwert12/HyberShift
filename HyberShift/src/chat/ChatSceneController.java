@@ -79,7 +79,7 @@ public class ChatSceneController implements Initializable {
 	@FXML Label lblRoomName;
     @FXML private JFXButton btnRealtimeBoard;
     @FXML private JFXButton btnPlan;
-    @FXML private JFXDrawer drawer;
+    //@FXML private JFXDrawer drawer;
     @FXML private Canvas canvas;
     @FXML private JFXDrawer drawerPlan;
     @FXML private JFXListView<Room> lvRoom;
@@ -126,8 +126,11 @@ public class ChatSceneController implements Initializable {
     GraphicsContext gc;
     PenDrawing penDrawing;
     DrawState drawState;
+    private ArrayList<String> drawers;	//list contain name of drawer
     @FXML private JFXColorPicker colorPicker;
     @FXML private JFXSlider slider;
+    @FXML private AnchorPane pnlBoard;
+    @FXML private Label lblDrawInfo;
 	
     //Socket
 	ChatSocket chatsocket;
@@ -196,12 +199,13 @@ public class ChatSceneController implements Initializable {
 									increaseIndexFrom(listTyping, indexToAdd);
 								}
 								else{
-									System.out.println("Has new message!!!!!!!");
+									
 									Room updateRoom = listRoom.getRoomById(id);
 									int index = listRoom.getIndexOfRoom(id);
 									updateRoom.setNewMessage(true);
 									
 									lvRoom.getItems().set(index, updateRoom);
+									System.out.println("Has new message!!!!!!!");
 //									System.out.println("New message at room " + id);
 //									listRoom.setNewMessageAtRoom(id, true);
 //									lvRoom.setItems(listRoom.getOList());
@@ -226,29 +230,60 @@ public class ChatSceneController implements Initializable {
 						try {
 							roomId = object.getString("room_id");
 							if (currRoom.getId().equals(roomId)){
-								if (drawer.isHidden()) return;
+								if (!pnlBoard.isVisible()) return;
 								JSONArray jsonarr = object.getJSONArray("points");
 								ArrayList<Point> listPoints = convertJsArrToLstPnt(jsonarr);
-								penDrawing.setListPoints(listPoints);
+								penDrawing.setListPoints(listPoints);	
+								Color color = Color.rgb(object.getInt("r"), object.getInt("g"), object.getInt("b"));								
+								gc.setStroke(color);
 								gc.setLineWidth(object.getDouble("width"));
 								
-								Color color = Color.rgb(object.getInt("r"), object.getInt("g"), object.getInt("b"));
-								
-								System.out.println("r g b : " + object.getInt("r") + " " + object.getInt("g") + " " + object.getInt("b"));
-								gc.setStroke(color);
-								
+								//display drawer
+								String newDrawer = object.getString("sender");
+								if (!drawers.contains(newDrawer)){
+									drawers.add(newDrawer);
+									String info = "";
+									for(int i=0; i<drawers.size(); i++){
+										info += drawers.get(i) + " ";
+									}
+									lblDrawInfo.setText(info + "is drawing . . .");
+								}
 								penDrawing.draw(gc);		
-								//gc.setStroke((Color)object.get("color"));
+								
 								
 							}
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
 					}
 				});
 				
+			}
+		}).on("stop_drawing", new Listener() {		
+			@Override
+			public void call(Object... args) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						JSONObject object = (JSONObject)args[0];
+						try {
+							String roomId = object.getString("room_id");
+							System.out.println("Checking room . . .");
+							if (!currRoom.getId().equals(roomId)) return;
+							
+							String sender = object.getString("sender");
+							drawers.remove(sender);
+							if (drawers.size() > 0)
+								lblDrawInfo.setText(drawers + " is drawing");
+							else
+								lblDrawInfo.setText(" ");
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
+					}
+				});
 			}
 		}).on("is_typing", new Listener() {		
 			@Override
@@ -464,10 +499,17 @@ public class ChatSceneController implements Initializable {
 						try {
 							JSONObject object = (JSONObject)args[0];
 							try {
-								if (!currRoom.getId().equals(object.getString("room_id")))
-									return;
-								btnSaveImg.setDisable(false);
-								imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
+//								if (!currRoom.getId().equals(object.getString("room_id")))
+//									return;
+//								btnSaveImg.setDisable(false);
+//								imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
+								
+								//test
+								//pnlSlide.setVisible(false);
+								//drawer.setVisible(true);
+								//drawer.open();
+								
+								gc.drawImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")), 10, 10);
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
@@ -509,13 +551,11 @@ public class ChatSceneController implements Initializable {
 								return;
 							
 							btnSaveImg.setDisable(false);
-							imgSlide.setImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")));
+							gc.drawImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")), 0, 0, canvas.getWidth(), canvas.getHeight());
 							
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
@@ -591,7 +631,7 @@ public class ChatSceneController implements Initializable {
 			pnlSlide.toFront();
 			pnlSlide.setVisible(true);
 			pnlPlan.setVisible(false);
-			drawer.setVisible(false);
+			//drawer.setVisible(false);
 		}
 		
 	}
@@ -599,6 +639,7 @@ public class ChatSceneController implements Initializable {
 	
 	@FXML
     void onActionBtnOpenSlide(ActionEvent event) {
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		listSlide.clear();
 		imgSlide.setImage(null);
 		currSlide = 0;
@@ -612,9 +653,17 @@ public class ChatSceneController implements Initializable {
 			public void run() {
 				try {
 					listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
-					imgSlide.setImage(listSlide.get(currSlide));
+					JSONObject object = new JSONObject();
+					 try {
+						object.put("room_id", currRoom.getId());
+						object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
+						
+						//emit
+						socket.emit("new_slide", object);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -746,47 +795,23 @@ public class ChatSceneController implements Initializable {
 	
     @FXML
     void onActionBtnRealtimeBoardClick() {
-    	if (drawer.isShown()){
-    		drawer.close();
-			//clear gc
-			gc.clearRect(canvas.getLayoutX(), canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
-			penDrawing.clear();
+    	
+    	if (pnlBoard.isVisible()){
+    		pnlBoard.setVisible(false);
+    		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());		
     	}
     	else{
-    		drawer.setVisible(true);
-			pnlPlan.setVisible(false);
-			pnlSlide.setVisible(false);
-			drawer.open();
+    		pnlBoard.setVisible(true);
+    		pnlPlan.setVisible(false);
+    		pnlSlide.setVisible(false);
     	}
-    	
-//    	if (drawer.isShown()){
-//    		Platform.runLater(new Runnable() {
-//				@Override
-//				public void run() {
-//					drawer.close();
-//					//clear gc
-//					gc.clearRect(canvas.getLayoutX(), canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
-//					penDrawing.clear();
-//				}
-//			});
-//    	}
-//    	else{
-//    		Platform.runLater(new Runnable() {
-//				@Override
-//				public void run() {
-//					drawer.setVisible(true);
-//					pnlPlan.setVisible(false);
-//					pnlSlide.setVisible(false);
-//					drawer.open();
-//				}
-//			});
-//    	}
+
     }
     
     @FXML
     void onMouseDraggedCanvas(MouseEvent event) {
-    	if (drawer.isHidden()) return;
-    	
+    	if (!pnlBoard.isVisible()) return;
+   
     	penDrawing.addPoint(new Point((int)event.getX(), (int)event.getY()));
     	gc.setStroke(colorPicker.getValue());
     	gc.setLineWidth(slider.getValue());
@@ -796,11 +821,12 @@ public class ChatSceneController implements Initializable {
     	JSONObject object = new JSONObject();
     	try {
 			object.put("room_id", currRoom.getId());
+			object.put("sender", userInfo.getFullName());
 			object.put("r", colorPicker.getValue().getRed() * 255);
 			object.put("g", colorPicker.getValue().getGreen() * 255);
 			object.put("b", colorPicker.getValue().getBlue() * 255);
 			object.put("width", slider.getValue());
-			System.out.println("sender r g b: " + colorPicker.getValue().getRed() + " " + colorPicker.getValue().getGreen() + " " + colorPicker.getValue().getBlue());
+			
 			//emit to server
 	    	JSONArray jsonArrPoints = convertLstPntToJsArr(penDrawing.getListPoints());
 	    	object.put("points", jsonArrPoints);
@@ -826,13 +852,24 @@ public class ChatSceneController implements Initializable {
     
     @FXML
     void onMousePressedCanvas(MouseEvent event) {
-    	if (drawer.isHidden()) return;
+    	//if (drawer.isHidden()) return;
+    	if (!pnlBoard.isVisible()) return;
     	penDrawing.clear();
     }
     
     @FXML
     void onMouseReleasedCanvas(MouseEvent event) {	
     	penDrawing.clear();
+    	//emit that sender stop drawing
+    	JSONObject object = new JSONObject();
+    	
+    	try {
+    		object.put("room_id", currRoom.getId());
+			object.put("sender", userInfo.getFullName());
+			socket.emit("stop_drawing", object);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}	
     }
     
     @FXML
@@ -892,7 +929,7 @@ public class ChatSceneController implements Initializable {
     		pnlPlan.setVisible(true);
     		pnlPlan.toFront();
     		pnlSlide.setVisible(false);
-    		drawer.setVisible(false);
+    		pnlBoard.setVisible(false);
     	}
     }
     
@@ -958,9 +995,10 @@ public class ChatSceneController implements Initializable {
 	}
 	
 	private void updateUI(){
-		//pen drawing
-		//gc.setLineWidth(slider.getValue());
-		//gc.setStroke(colorPicker.getValue());
+		pnlBoard.setVisible(false);
+		
+		//init drawers list
+		drawers = new ArrayList<>();
 		
 		pnlNotification.setVisible(true);
 		pnlRoom.setVisible(false);
@@ -997,7 +1035,7 @@ public class ChatSceneController implements Initializable {
 		
 		//set canvas
 		gc = canvas.getGraphicsContext2D();
-		
+	
 		//update list online to lv
 		ObservableList<String> olist = FXCollections.observableArrayList(listOnline.getListName());
 		lvOnline.setItems(olist);
@@ -1049,6 +1087,10 @@ public class ChatSceneController implements Initializable {
 				
 				//clear list journal
 				listJournal.getList().clear();
+				
+				//clear board
+				gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+				drawers.clear();
 				
 				//auto complete for tfPerfomrer
 				//TextFields.bindAutoCompletion(tfPerformers, currRoom.getMembers());
@@ -1108,16 +1150,7 @@ public class ChatSceneController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		//update UI
 		updateUI();	
-		
-		//Test lvPlan
-//		listJournal.addJournal(new Journal("id1", "Test workd 1", new ArrayList<String>() {} , false,  " ", null)); 
-//		listJournal.addJournal(new Journal("id2", "Test workd 2", new ArrayList<String>() {} , true, " ", null)); 
-//		listJournal.addJournal(new Journal("id3", "Test workd 3", new ArrayList<String>() {} , true, " ", null)); 
-//		
-//		ObservableList<Journal> testList = FXCollections.observableArrayList(listJournal.getOListJournal());
-//		
-//		lvPlan.setItems(testList);
-		
+
 		lvPlan.setCellFactory(new Callback<ListView<Journal>, ListCell<Journal>>() {
 			
 			@Override
