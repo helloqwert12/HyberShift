@@ -26,6 +26,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -73,7 +74,6 @@ import dataobject.UserOnline;
 
 
 public class ChatSceneController implements Initializable {
-	
 	//JFX controls
 	@FXML JFXListView<Message> lvMessage;
 	@FXML JFXTextField taEdit;
@@ -94,6 +94,9 @@ public class ChatSceneController implements Initializable {
     @FXML private JFXTextField tfNewTask;
     @FXML private JFXTextField tfPerformers;
     @FXML private JFXButton btnCreateTask;
+    
+    //Progress indicator
+    @FXML private ProgressIndicator progressIndicator;
     
     //Test
     @FXML private Button btnImage;
@@ -164,7 +167,6 @@ public class ChatSceneController implements Initializable {
 	@FXML private JFXButton btnAddFriend;
 	
 	public ChatSceneController(){
-		
 		//lvMessage.setItems(itemList);
 		chatsocket = ChatSocket.getInstance();
 		socket = chatsocket.getSocket();
@@ -655,35 +657,53 @@ public class ChatSceneController implements Initializable {
 	
 	@FXML
     void onActionBtnOpenSlide(ActionEvent event) {
-//		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-//		listSlide.clear();
-//		imgSlide.setImage(null);
-//		currSlide = 0;
-//		
-//		FileChooser fileChooser = new FileChooser();
-//        
-//        //Show open file dialog
-//        File pptPath = fileChooser.showOpenDialog(null);
-//    	Platform.runLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
-//					JSONObject object = new JSONObject();
-//					 try {
-//						object.put("room_id", currRoom.getId());
-//						object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
-//						
-//						//emit
-//						socket.emit("new_slide", object);
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
-//			}
-//		});
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		listSlide.clear();
+		imgSlide.setImage(null);
+		currSlide = 0;
+		
+		FileChooser fileChooser = new FileChooser();
+        
+        //Show open file dialog
+        File pptPath = fileChooser.showOpenDialog(null);
+    	Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				progressIndicator.setVisible(true);
+				//create task for progress indicator
+				Task task = new Task<Void>() {
+					@Override
+					protected Void call() throws Exception {
+						try {
+							listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
+							JSONObject object = new JSONObject();
+							 try {
+								object.put("room_id", currRoom.getId());
+								object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
+								
+								//emit
+								socket.emit("new_slide", object);
+								
+								progressIndicator.setVisible(false);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						return null;
+					}
+				};
+				
+				//
+				progressIndicator.setProgress(0);
+				progressIndicator.progressProperty().bind(task.progressProperty());
+				
+				
+				new Thread(task).start();
+
+			}
+		});
     }
 	
 	@FXML
