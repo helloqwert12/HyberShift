@@ -566,7 +566,7 @@ public class ChatSceneController implements Initializable {
 							if (!currRoom.getId().equals(object.getString("room_id")))
 								return;
 							
-							btnSaveImg.setDisable(false);
+							////btnSaveImg.setDisable(false);
 							gc.drawImage(ImageUtils.decodeBase64BinaryToImage(object.getString("imgstring")), 0, 0, canvas.getWidth(), canvas.getHeight());
 							
 						} catch (JSONException e) {
@@ -724,7 +724,7 @@ public class ChatSceneController implements Initializable {
                 ex.printStackTrace();
             }
         }
-        btnSaveImg.setDisable(true);
+        ////btnSaveImg.setDisable(true);
 	}
 	
 	@FXML

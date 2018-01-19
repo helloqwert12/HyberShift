@@ -191,7 +191,7 @@
                               </ImageView>
                            </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="btnSaveImg" contentDisplay="GRAPHIC_ONLY" disable="true" layoutX="567.0" layoutY="-1.0" onAction="#onActionBtnSaveImg" prefHeight="65.0" prefWidth="64.0">
+                        <JFXButton fx:id="btnSaveImg" contentDisplay="GRAPHIC_ONLY" layoutX="567.0" layoutY="-1.0" onAction="#onActionBtnSaveImg" prefHeight="65.0" prefWidth="64.0">
                            <graphic>
                               <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
