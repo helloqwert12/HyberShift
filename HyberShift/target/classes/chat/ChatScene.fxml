@@ -120,49 +120,27 @@
                         <FontAwesomeIconView fill="WHITE" glyphName="LIST_ALT" size="40" />
                      </graphic>
                   </JFXButton>
-                  <JFXButton fx:id="btnShowSlide" contentDisplay="GRAPHIC_ONLY" layoutX="826.0" layoutY="5.0" onAction="#onActionBtnShowSlide" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="295.0" AnchorPane.topAnchor="5.0">
-                     <graphic>
-                        <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="40" />
-                     </graphic>
-                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="11.0" layoutY="584.0" prefHeight="92.0" prefWidth="684.0" style="-fx-background-color: #1A3457; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-radius: 10 10 0 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <JFXButton fx:id="btnSent" contentDisplay="GRAPHIC_ONLY" layoutX="715.0" layoutY="14.0" onAction="#onActionBtnSentClick" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="715.0" AnchorPane.topAnchor="14.0">
                      <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/sent.png" />
-                           </image>
-                        </ImageView>
+                        <FontAwesomeIconView fill="#f2f2f2" glyphName="SEND" size="35" />
                      </graphic>
                   </JFXButton>
                   <JFXTextField fx:id="taEdit" layoutX="32.0" layoutY="31.0" onKeyPressed="#onKeyPressedBtnSentClick" onKeyTyped="#onKeyTypedTaEdit" prefHeight="31.0" prefWidth="659.0" promptText="Insert message . . ." style="-fx-background-color: white;" />
+                  <JFXButton fx:id="btnOpenFile" contentDisplay="GRAPHIC_ONLY" layoutX="787.0" layoutY="14.0" onAction="#onActionBtnOpenFile" prefHeight="65.0" prefWidth="65.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="FILE_TEXT" size="35" />
+                     </graphic>
+                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="pnlSlide" layoutX="546.0" layoutY="82.0" prefHeight="605.0" prefWidth="641.0" visible="false">
                <children>
                   <ImageView fx:id="imgSlide" fitHeight="473.0" fitWidth="688.0" layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" />
-                  <JFXButton fx:id="btnSaveImg" contentDisplay="GRAPHIC_ONLY" disable="true" layoutX="120.0" layoutY="520.0" onAction="#onActionBtnSaveImg" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="120.0">
-                     <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/save_image.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
                   <Hyperlink fx:id="hlRecievedFile" layoutX="300.0" layoutY="550.0" onAction="#onActionHlRecievedFile" text="Recieved file" visible="false" />
-                  <JFXButton fx:id="btnOpenFile" contentDisplay="GRAPHIC_ONLY" layoutX="200.0" layoutY="520.0" onAction="#onActionBtnOpenFile" prefHeight="65.0" prefWidth="65.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="200.0">
-                     <graphic>
-                        <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/save_image.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="pnlBoard" layoutX="530.0" layoutY="78.0" prefHeight="612.0" prefWidth="714.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="94.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="78.0">
@@ -209,6 +187,15 @@
                               <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@icon/choose_img.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="btnSaveImg" contentDisplay="GRAPHIC_ONLY" disable="true" layoutX="567.0" layoutY="-1.0" onAction="#onActionBtnSaveImg" prefHeight="65.0" prefWidth="64.0">
+                           <graphic>
+                              <ImageView fitHeight="52.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icon/save_image.png" />
                                  </image>
                               </ImageView>
                            </graphic>

@@ -31,6 +31,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -43,6 +44,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Callback;
 import Tools.ImageUtils;
 import Tools.SlideManager;
@@ -181,6 +183,11 @@ public class ChatSceneController implements Initializable {
 							String msg = msgjson.getString("message");
 							String id = msgjson.getString("id");
 							String imgstring = msgjson.getString("imgstring");
+							
+							//modify if it's your name
+//							if (userInfo.getFullName().equals(sender))
+//								sender = "You";
+							
 							Message message = new Message(id, msg, sender, imgstring, 0);
 							if (id.equals("public"))
 								System.out.println("public has new message");
@@ -297,8 +304,17 @@ public class ChatSceneController implements Initializable {
 							String senderName = object.getString("sender");
 							String id = object.getString("id");
 							String imgstring = object.getString("imgstring");
+							String content = " is typing . . .";
+							//modify if it's your name
+//							if (userInfo.getFullName().equals(senderName)){
+//								senderName = "You";
+//								content = " are typing . . .";
+//							}
+//							else
+//								content = " is typing . . .";
+		
 							if (currRoom.getId().equals(id)){
-								lvMessage.getItems().add(new Message(id, " is typing ...", senderName, imgstring, 0));
+								lvMessage.getItems().add(new Message(id, content, senderName, imgstring, 0));
 								int index = lvMessage.getItems().size() - 1;
 								listTyping.add(new SenderTyping(senderName, index));
 							}
@@ -639,35 +655,35 @@ public class ChatSceneController implements Initializable {
 	
 	@FXML
     void onActionBtnOpenSlide(ActionEvent event) {
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		listSlide.clear();
-		imgSlide.setImage(null);
-		currSlide = 0;
-		
-		FileChooser fileChooser = new FileChooser();
-        
-        //Show open file dialog
-        File pptPath = fileChooser.showOpenDialog(null);
-    	Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
-					JSONObject object = new JSONObject();
-					 try {
-						object.put("room_id", currRoom.getId());
-						object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
-						
-						//emit
-						socket.emit("new_slide", object);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
+//		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+//		listSlide.clear();
+//		imgSlide.setImage(null);
+//		currSlide = 0;
+//		
+//		FileChooser fileChooser = new FileChooser();
+//        
+//        //Show open file dialog
+//        File pptPath = fileChooser.showOpenDialog(null);
+//    	Platform.runLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					listSlide = SlideManager.convertSlideToImage(pptPath.getPath());
+//					JSONObject object = new JSONObject();
+//					 try {
+//						object.put("room_id", currRoom.getId());
+//						object.put("imgstring", ImageUtils.imgToBase64String(SwingFXUtils.fromFXImage(listSlide.get(currSlide), null)));
+//						
+//						//emit
+//						socket.emit("new_slide", object);
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
     }
 	
 	@FXML
@@ -694,16 +710,20 @@ public class ChatSceneController implements Initializable {
 	void onActionBtnSaveImg(ActionEvent event){
 		FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Image");
+        fileChooser.setInitialFileName("new_image");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("PNG (*.png)", "*.png"));
+      
          
         File file = fileChooser.showSaveDialog(null);
+        
         if (file != null) {
             try {
-                ImageIO.write(SwingFXUtils.fromFXImage(imgSlide.getImage(),null), "png", file);
+            	WritableImage imgToSave = canvas.snapshot(new SnapshotParameters(), null);
+                ImageIO.write(SwingFXUtils.fromFXImage(imgToSave,null), "png", file);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        
         btnSaveImg.setDisable(true);
 	}
 	
@@ -763,7 +783,6 @@ public class ChatSceneController implements Initializable {
 			//emit
 			socket.emit("new_slide", object);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	 }

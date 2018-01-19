@@ -95,7 +95,6 @@ public class RegisterSceneController{
 		Socket socket;
 		UserInfo userInfo = UserInfo.getInstance();
 		ChatSocket chatsocket;
-		Runnable socketRunnable;
 		
 		//List online
 		ListOnline listOnline = ListOnline.getInstance();
@@ -111,18 +110,14 @@ public class RegisterSceneController{
 	    
 	    public RegisterSceneController() {  	    	
 	    	socket = ChatSocket.getInstance().getSocket();
-	    	socket.on(Socket.EVENT_CONNECT, new Listener() {
-				
+	    	socket.on(Socket.EVENT_CONNECT, new Listener() {	
 				@Override
 				public void call(Object... args) {
-					// TODO Auto-generated method stub
 					System.out.println("Client connected to server");
 				}
-			}).on(Socket.EVENT_DISCONNECT, new Listener() {
-				
+			}).on(Socket.EVENT_DISCONNECT, new Listener() {	
 				@Override
 				public void call(Object... args) {
-					// TODO Auto-generated method stub
 					System.out.println("Client disconnected to server");
 				}
 			});
